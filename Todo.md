@@ -6,7 +6,7 @@
 * ~~Player Role-Specific Control~~
 * Keyboard-independant control mapping
 * Server/Client Code (Networking)
-* Zoom Levels (for gunner/commander)
+* ~~Zoom Levels (for gunner/commander)~~
 * Collision with Vehicles
 
 

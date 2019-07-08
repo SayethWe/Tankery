@@ -1,32 +1,31 @@
 abstract class Player extends Entity {
-  private final float viewAngle;
-  private final float viewDistance;
-  private final float viewDistSquare;
-  
+  //private final float viewAngle;
+  //private final float viewDistance;
+  //private final float viewDistSquare;
+  private final ViewField[] viewFields;
+  private final int viewFieldMax;
+
+  private int selectedView=0;  
   final Tank vehicle;
 
   //private float facing;
   //private float x;
   //private float y;
 
-  public Player(float viewAngle, float viewDistance, Tank vehicle) {
+  public Player(ViewField[] viewFields, Tank vehicle) {
     super(vehicle.getX(), vehicle.getY(), vehicle.getFacing());
-    this.viewAngle=viewAngle;
-    this.viewDistance=viewDistance;
+    this.viewFields=viewFields;
+    this.viewFieldMax=viewFields.length-1;
     this.vehicle=vehicle;
-    viewDistSquare=viewDistance*viewDistance;
   }
 
-  public boolean isInView(float x, float y) {
-    float distSquare=findSquareDist(x, y, this.x, this.y);
-    if (distSquare>=viewDistSquare)return false;
-
-    float angle=atan2(y-this.y, x-this.x);
-    angle=(angle+TWO_PI)%TWO_PI;
-    float viewArc = viewAngle/2;
-    //herein lies the problem
-    float seperation = abs(facing-angle)%TWO_PI;
-    return (seperation<=viewArc||seperation>=TWO_PI-viewArc);
+  public boolean isInView(float checkX, float checkY) {
+    return viewFields[selectedView].isInView(x,y,facing,checkX,checkY);
+  }
+  
+  public void changeView(int del) {
+    selectedView+=del;
+    selectedView=constrain(selectedView,0,viewFieldMax);
   }
 
   public void moveTo(Entity e) {
@@ -34,12 +33,17 @@ abstract class Player extends Entity {
   }
 
   public float getViewDist() {
-    return viewDistance;
+    return viewFields[selectedView].getViewDistance();
+  }
+  
+  public int getFogScale() {
+    return viewFields[selectedView].getFogScale();
   }
 
   public void render() {
     stroke(255, 50, 70);
-    line(x, y, x+cos(facing)*viewDistance, y+sin(facing)*viewDistance);
+    float viewLength = viewFields[selectedView].getViewDistance();
+    line(x, y, x+cos(facing)*viewLength, y+sin(facing)*viewLength);
   }
 
   public void update() {
@@ -61,11 +65,11 @@ abstract class Player extends Entity {
 
 public class TestPlayer extends Player {
   public TestPlayer() {
-    super(TWO_PI, 200, playerTank);
+    this(playerTank);
   }
   
   public TestPlayer(Tank vehicle) {
-     super(TWO_PI, 200, vehicle);
+     super(new ViewField[]{new ViewField(TWO_PI, 200, 3)},vehicle);
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -108,7 +112,7 @@ public class Commander extends Player {
   private static final float TURN_RATE = PI/15;
   
   public Commander(Tank vehicle) {
-    super(3*PI/4, 100, vehicle);
+    super(new ViewField[]{new ViewField(3*PI/4, 120,2),new ViewField(3*PI/5,200,3)}, vehicle);
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -117,12 +121,24 @@ public class Commander extends Player {
     } else if (keys.getOrDefault('e', false)) {
       turnBy(TURN_RATE);
     }
+    
+    if (keys.getOrDefault('\'', false)) {
+      turnBy(-TURN_RATE/2);
+    } else if (keys.getOrDefault('.', false)) {
+      turnBy(TURN_RATE/2);
+    }
+    
+    if (keys.getOrDefault(',', false)) {
+      changeView(1);
+    } else if (keys.getOrDefault('o', false)) {
+      changeView(-1);
+    }
   }
 }
 
 public class Driver extends Player {
   public Driver(Tank vehicle) {
-    super(PI/2, 160, vehicle);
+    super(new ViewField[]{new ViewField(PI/2, 160, 2)}, vehicle);
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -153,7 +169,7 @@ public class Driver extends Player {
 
 public class Gunner extends Player {
   public Gunner(Tank vehicle) {
-    super(PI/6, 70, vehicle);
+    super(new ViewField[]{new ViewField(PI/6, 70, 1),new ViewField(PI/10,140,2)}, vehicle);
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -168,10 +184,52 @@ public class Gunner extends Player {
     } else if (keys.getOrDefault('.', false)) {
       vehicle.aimTurret(0.5);
     }
+    
+    if (keys.getOrDefault(',', false)) {
+      changeView(1);
+    } else if (keys.getOrDefault('o', false)) {
+      changeView(-1);
+    }
   }
   
   public void update() {
     super.update();
     turnTo(vehicle.getTurretFacing());
   }
+}
+
+public class ViewField {
+  
+  private final float viewAngle;
+  private final float viewDistance;
+  private final float viewDistSquare;
+  private final int fogScale;
+  
+  public ViewField(float viewAngle, float viewDistance, int resolution) {
+    this.viewAngle = viewAngle;
+    this.viewDistance = viewDistance;
+    this.viewDistSquare = viewDistance*viewDistance;
+    this.fogScale = resolution;
+  }
+  
+  public boolean isInView(float x, float y, float facing, float checkX, float checkY) {
+    float distSquare=findSquareDist(checkX, checkY, x, y);
+    if (distSquare>=viewDistSquare)return false;
+
+    float angle=atan2(checkY-y, checkX-x);
+    angle=(angle+TWO_PI)%TWO_PI;
+    float viewArc = viewAngle/2;
+    //herein lies the problem
+    float seperation = abs(facing-angle)%TWO_PI;
+    return (seperation<=viewArc||seperation>=TWO_PI-viewArc);
+  }
+  
+  public float getViewDistance() {
+    return viewDistance;
+  }
+  
+  public int getFogScale() {
+    return fogScale;
+  }
+  
 }

@@ -1,4 +1,4 @@
-final int FOG_SCALE_FACTOR=2;
+//final int FOG_SCALE_FACTOR=2;
 
 public void drawUI() {
     float healthWidth=width*playerTank.getHealth()/playerTank.maxHealth;
@@ -12,6 +12,7 @@ public void drawUI() {
 }
 
 void handleFog() {
+  int fogScale=testPlayer.getFogScale();
   int tpx=int(testPlayer.getX());
   int tpy=int(testPlayer.getY());
   int tpv=int(testPlayer.getViewDist());
@@ -19,14 +20,14 @@ void handleFog() {
   stroke(128);
   fill(128);
   rectMode(CORNER);
-  for(int i = -tpv;i<=tpv;i+=FOG_SCALE_FACTOR){
-    for(int j = -tpv;j<=tpv;j+=FOG_SCALE_FACTOR){
+  for(int i = -tpv;i<=tpv;i+=fogScale){
+    for(int j = -tpv;j<=tpv;j+=fogScale){
       int x=tpx+i;
       int y=tpy+j;
       if ((x>=0&&x<=width)&&(y>=0&&y<=height)){
         if (!testPlayer.isInView(x,y)) {
         //if(!playerTank.contains(x,y)) {
-          rect(x,y,FOG_SCALE_FACTOR,FOG_SCALE_FACTOR);
+          rect(x,y,fogScale,fogScale);
         }
       }
     }

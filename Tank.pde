@@ -49,12 +49,12 @@ class Tank extends Entity {
   }
   
   public void render() {
-    render(hull,x,y,facing);
-    render(turret,x,y,turretFacing);
-    render(cannon,x,y,turretFacing);
+    render(hull,facing);
+    render(turret,turretFacing);
+    render(cannon,turretFacing);
   }
   
-  public void render(Renderable r, float x, float y, float facing) {
+  public void render(Renderable r, float facing) {
     pushMatrix();
     translate(x,y);
     rotate(facing);
@@ -62,7 +62,7 @@ class Tank extends Entity {
     popMatrix();
   }
   
-  public boolean collide(Collideable c, float x, float y, float facing, float checkX, float checkY) {
+  public boolean collide(Collideable c, float facing, float checkX, float checkY) {
     AffineTransform at = new AffineTransform();
     at.translate(x,y);
     at.rotate(facing);
@@ -73,7 +73,7 @@ class Tank extends Entity {
   public boolean contains(float x, float y) {
     //TODO: Use java.awt.shape for collision detection
     //return(dist(this.x,this.y,x,y)<20);
-    return(collide(turret, this.x,this.y,turretFacing,x,y)||collide(hull, this.x,this.y,facing,x,y));
+    return(collide(hull,facing,x,y)||collide(turret,turretFacing,x,y));
   }
   public float getThickness() {
     return hull.armor;

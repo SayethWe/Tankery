@@ -60,7 +60,8 @@ enum Hull implements Collideable, Renderable{
  
 enum Turret implements Collideable, Renderable{
   
-  TEST(PI/20,5.0,30,new float[]{20,-10,-10},new float[]{0,17.3,-17.3},3,#6E52FF,#6E52FF);
+  TEST(PI/20,5.0,30,new float[]{20,-10,-10},new float[]{0,17.3,-17.3},3,#6E52FF,#6E52FF),
+  PENT(PI/25,6.0,45,new float[]{20.00, 6.18, -16.18, -16.18, 6.18}, new float[]{0.00, 19.02, 11.76, -11.76, -19.02}, 5, #87F4F5, #225D67);
   
   public final float mass;
   public final float turnRate;
@@ -122,7 +123,8 @@ enum Cannon implements Renderable {
 }
 
 enum Engine {
-  TEST(150,5.0);
+  TEST(150,5.0),
+  WEAK(75,3.0);
   
   public final int power;
   public final float mass;

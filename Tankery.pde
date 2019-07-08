@@ -36,9 +36,9 @@ void setup() {
   entities.add(new Tank(200,300,PI/3,PI/2));
   entities.add(new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST));
   testPlayer = new TestPlayer();
-  //testPlayer = new Commander());
-  //testPlayer=new Gunner();
-  //testPlayer=new Driver();
+  //testPlayer = new Commander(playerTank);
+  //testPlayer=new Gunner(playerTank);
+  //testPlayer=new Driver(playerTank);
   entities.add(testPlayer);
   logger.log("Startup sucessful");
 }

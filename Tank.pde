@@ -12,7 +12,7 @@ class Tank extends Entity {
   private int reloadCounter;
   
   public Tank() {
-    this(0,0,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST);
+    this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST);
   }
   
   public Tank(float x, float y, float facing, float turretFacing) {
@@ -32,7 +32,7 @@ class Tank extends Entity {
     this.speed=engine.power/mass;
   }
   
-  public void turnTurret(float delTheta) {
+  public void turnTurretBy(float delTheta) {
     turretFacing+=delTheta;
   }
   public void turnTurretTo(float theta) {
@@ -104,14 +104,15 @@ class Tank extends Entity {
     moveTo(newX,newY);
   }
   
-  public void turn(int dir) {
+  public void turn(float dir) {
     println("traverse "+dir);
     float traverse = PI/20;
     turnBy(traverse*dir);
+    turnTurretBy(traverse*dir);
   }
   
-  public void aimTurret(int dir) {
-    turnTurret(turret.turnRate*dir);
+  public void aimTurret(float dir) {
+    turnTurretBy(turret.turnRate*dir);
   }
   
   public void update() {

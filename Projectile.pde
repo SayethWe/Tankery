@@ -2,7 +2,7 @@ class Projectile extends Entity{
   private static final float PEN_LOSS_ON_BOUNCE = 0.1;
   private static final float DAMAGE_VARIANCE = 0.1;
   private static final float MAX_DAMAGE_VARIANCE = 0.3;
-  private static final int FUSE = 4;
+  private static final int FUSE = 5;
   
   float penetration;
   float velocity;

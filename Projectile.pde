@@ -32,7 +32,7 @@ class Projectile extends Entity{
   public void markToRemove() {
      super.markToRemove();
      deadProjectiles.add(this);
-     log.println(getDamage());
+     //logger.log(getDamage());
   }
   
   public void render() {

@@ -38,7 +38,7 @@ void handleMovement() {
   }
   
   if (keys.getOrDefault('s',false)) {
-    stop();
+    exit();
   }
   
   if (keys.getOrDefault('d',false)) {

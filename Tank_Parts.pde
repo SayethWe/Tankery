@@ -10,6 +10,26 @@ interface Renderable {
   public PShape getRender();
 }
 
+static class PartBuilder {
+  public static Shape createCollision(float[] xPoints, float[] yPoints, int points) {
+    if(!(xPoints.length==points&&yPoints.length==points)) throw new IllegalArgumentException();
+    return new Polygon(int(xPoints),int(yPoints),points);
+  }
+  public static  PShape createRender(float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
+    if(!(xPoints.length==points&&yPoints.length==points)) throw new IllegalArgumentException();
+    PShape render = instance.createShape();
+    render.beginShape();
+    for(int i = 0; i<points; i++) {
+      render.vertex(xPoints[i],yPoints[i]);
+    }
+    render.endShape(CLOSE);
+    
+    render.setFill(fill);
+    render.setStroke(stroke);
+    return render;
+  }
+}
+
 enum Hull implements Collideable, Renderable{
   
   TEST(70,20.0,70,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54);

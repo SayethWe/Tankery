@@ -4,29 +4,6 @@ public float findSquareDist(float x1, float y1, float x2, float y2){
   return (xDist*xDist)+(yDist*yDist);
 }
 
-static class PartBuilder {
-  public static Shape createCollision(float[] xPoints, float[] yPoints, int points) {
-    if(!(xPoints.length==points&&yPoints.length==points)) throw new IllegalArgumentException();
-    return new Polygon(int(xPoints),int(yPoints),points);
-  }
-  public static  PShape createRender(float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
-    if(!(xPoints.length==points&&yPoints.length==points)) throw new IllegalArgumentException();
-    PShape render = instance.createShape();
-    render.beginShape();
-    for(int i = 0; i<points; i++) {
-      render.vertex(xPoints[i],yPoints[i]);
-    }
-    render.endShape(CLOSE);
-    
-    //color fillColor = instance.color(fill[0],fill[1],fill[2]);
-    //color strokeColor = instance.color(stroke[0],stroke[1],stroke[2]);
-    
-    render.setFill(fill);
-    render.setStroke(stroke);
-    return render;
-  }
-}
-
 public static float clampedGaussian(float mean, float variance, float min, float max) {
   float rand = instance.randomGaussian();
   float calcDamage = rand*variance+mean;
@@ -35,4 +12,62 @@ public static float clampedGaussian(float mean, float variance, float min, float
 
 static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber) {
   entities.add(instance.new Projectile(x,y,direction,penetration, shellVelocity,damage,caliber));
+}
+
+String formattedDate(char sep) {
+  StringBuilder result = new StringBuilder();
+  result.append(nf(year(),4)).append(sep);
+  result.append(nf(month(),2)).append(sep);
+  result.append(nf(day(),2));
+  
+  return result.toString();
+}
+
+String formattedTime(char sep) {
+  StringBuilder result = new StringBuilder();
+  result.append(nf(hour(),2)).append(sep);
+  result.append(nf(minute(),2)).append(sep);
+  result.append(nf(second(),2));
+  return result.toString();
+}
+
+enum LogLevel {
+  
+  ERROR("[ERROR] "),
+  INFO("");
+  
+  public final String pre;
+  
+  private LogLevel(String pre) {
+    this.pre=pre;
+  }
+  
+}
+
+class Logger {
+  
+  final PrintWriter logFile;
+  
+  public Logger(String path) {
+    logFile = createWriter(path+"log_"+formattedDate('-')+'_'+formattedTime('-')+".txt");
+  }
+  
+  public void dispose() {
+    log("Closing Log");
+    logFile.flush();
+    logFile.close();
+  }
+  
+  public void log(String text) {
+    log(text, LogLevel.INFO);
+  }
+  
+  public void log(String text, LogLevel level) {
+    logFile.println(formattedTime(':')+' '+level.pre+text);
+  }
+  
+  public void lineBreak() {
+    logFile.println();
+  }
+  
 }

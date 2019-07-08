@@ -19,12 +19,13 @@ public static final Set<Projectile>projectiles=new HashSet<Projectile>();
 Set<Entity>toRemove=new HashSet<Entity>();
 Set<Projectile>deadProjectiles=new HashSet<Projectile>();
 
-PrintWriter log;
+Logger logger;
 
 void setup() {
   instance = this;
-  log = createWriter("logs/Tankery_Log_"+nf(year(),4)+"-"+nf(month(),2)+"-"+nf(day(),2)+"_"+nf(hour(),2)+"-"+nf(minute(),2)+"-"+nf(second(),2)+".txt");
+  logger = new Logger("logs/Tankery_");
   //registerDispose(e->{};);
+  registerMethod("dispose",this);
   
   size(750,750);
   surface.setResizable(true);
@@ -38,6 +39,7 @@ void setup() {
   //testPlayer=new Gunner();
   //testPlayer=new Driver();
   entities.add(testPlayer);
+  logger.log("Startup sucessful");
 }
 
 void draw() {
@@ -51,9 +53,8 @@ void draw() {
   drawUI(); //must be last call
 }
 
-void stop() {
-  log.flush();
-  log.close();
+void dispose() {
+  logger.dispose();
   println("Shutting down");
   exit();
 }

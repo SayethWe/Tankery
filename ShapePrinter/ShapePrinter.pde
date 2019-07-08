@@ -5,6 +5,9 @@ PShape render = createShape();
 color fill=color(135,244,245);
 color stroke=color(34,93,103);
 
+String fillString = '#'+hex(fill,6);
+String strokeString = '#'+hex(stroke,6);
+
 int vertices=5;
 int radius = 20;
 float delTheta = TWO_PI/vertices;
@@ -36,5 +39,15 @@ shape(render);
 println(x);
 println(y);
 println(vertices);
-println('#'+hex(fill,6));
-println('#'+hex(stroke,6));
+println(fillString);
+println(strokeString);
+
+StringBuilder printable = new StringBuilder();
+printable.append(x).append(", ");
+printable.append(y).append(", ");
+printable.append(vertices).append(", ");
+printable.append(fillString).append(", ");
+printable.append(strokeString);
+
+println();
+println(printable);

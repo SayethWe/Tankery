@@ -2,10 +2,13 @@ abstract class Player extends Entity {
   //private final float viewAngle;
   //private final float viewDistance;
   //private final float viewDistSquare;
+  private final static int VIEW_COOL_DOWN = 15;
+  
   private final ViewField[] viewFields;
   private final int viewFieldMax;
 
-  private int selectedView=0;  
+  private int selectedView=0;
+  private int viewCoolDown=0;
   final Tank vehicle;
 
   //private float facing;
@@ -24,8 +27,11 @@ abstract class Player extends Entity {
   }
   
   public void changeView(int del) {
-    selectedView+=del;
-    selectedView=constrain(selectedView,0,viewFieldMax);
+    if(viewCoolDown<=0) {
+      selectedView+=del;
+      selectedView=constrain(selectedView,0,viewFieldMax);
+      viewCoolDown=VIEW_COOL_DOWN;
+    }
   }
 
   public void moveTo(Entity e) {
@@ -48,6 +54,7 @@ abstract class Player extends Entity {
 
   public void update() {
     moveTo(vehicle);
+    viewCoolDown--;
   }
 
   public boolean contains(float x, float y) {
@@ -112,7 +119,7 @@ public class Commander extends Player {
   private static final float TURN_RATE = PI/15;
   
   public Commander(Tank vehicle) {
-    super(new ViewField[]{new ViewField(3*PI/4, 120,2),new ViewField(3*PI/5,200,3)}, vehicle);
+    super(new ViewField[]{new ViewField(3*PI/4, 120,2),new ViewField(3*PI/5,200,3),new ViewField(PI/6,300,5)}, vehicle);
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {

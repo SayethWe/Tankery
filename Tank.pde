@@ -32,7 +32,6 @@ class Tank extends Entity {
     this.health=this.maxHealth;
     this.speed=engine.power/(mass+hull.groundResistance);
     this.traverse=PI*engine.traversePower/(mass+hull.groundResistance);
-    println(mass);
   }
   
   public void turnTurretBy(float delTheta) {
@@ -46,7 +45,7 @@ class Tank extends Entity {
     health-=damage;
     health=constrain(health,0,maxHealth);
     if(health==0) this.markToRemove();
-    println(health+" "+damage); 
+    logger.log(this+" hit for: " + damage+ ", now at: "+health); 
   }
   
   public void render() {

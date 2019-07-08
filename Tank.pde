@@ -6,6 +6,7 @@ class Tank extends Entity {
   private final float mass;
   public final int maxHealth;
   private final float speed;
+  private final float traverse;
   
   private float turretFacing;
   private int health;
@@ -29,7 +30,9 @@ class Tank extends Entity {
     this.mass = hull.mass+turret.mass+cannon.mass+engine.mass;
     this.maxHealth=hull.maxHealth+turret.maxHealth;
     this.health=this.maxHealth;
-    this.speed=engine.power/mass;
+    this.speed=engine.power/(mass+hull.groundResistance);
+    this.traverse=PI*engine.traversePower/(mass+hull.groundResistance);
+    println(mass);
   }
   
   public void turnTurretBy(float delTheta) {
@@ -92,21 +95,14 @@ class Tank extends Entity {
     }
   }
   
-  public void drive() {
-    float newX = x+speed*cos(facing);
-    float newY = y+speed*sin(facing);
-    moveTo(newX,newY);
-  }
-  
-  public void back() {
-    float newX = x-speed*cos(facing)/2;
-    float newY = y-speed*sin(facing)/2;
+  public void drive(float dir) {
+    float newX = x+dir*speed*cos(facing);
+    float newY = y+dir*speed*sin(facing);
     moveTo(newX,newY);
   }
   
   public void turn(float dir) {
-    println("traverse "+dir);
-    float traverse = PI/20;
+    //println("traverse "+dir);
     turnBy(traverse*dir);
     turnTurretBy(traverse*dir);
   }

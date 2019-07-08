@@ -42,7 +42,9 @@ abstract class Player extends Entity {
     line(x, y, x+cos(facing)*viewDistance, y+sin(facing)*viewDistance);
   }
 
-  public void update() {}
+  public void update() {
+    moveTo(vehicle);
+  }
 
   public boolean contains(float x, float y) {
     return false;
@@ -68,35 +70,25 @@ public class TestPlayer extends Player {
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
     if (keys.getOrDefault(',', false)) {
-      playerTank.drive();
-      testPlayer.moveTo(playerTank);
+      playerTank.drive(1);
     } else if (keys.getOrDefault('o', false)) {
-      playerTank.back();    
-      testPlayer.moveTo(playerTank);
+      playerTank.drive(-0.5);
     }
 
     if (keys.getOrDefault('a', false)) {
       playerTank.turn(-1);
-      turnTo(playerTank.getTurretFacing());
     } else if (keys.getOrDefault('e', false)) {
       playerTank.turn(1);
-      turnTo(playerTank.getTurretFacing());
     }
 
     if (keys.getOrDefault('\'', false)) {
       playerTank.aimTurret(-1);
-      testPlayer.turnTo(playerTank.getTurretFacing());
     } else if (keys.getOrDefault('.', false)) {
       playerTank.aimTurret(1);
-      testPlayer.turnTo(playerTank.getTurretFacing());
     }
 
     if (keys.getOrDefault(' ', false)) {
       playerTank.fire();
-    }
-
-    if (keys.getOrDefault('s', false)) {
-      stop();
     }
 
     if (keys.getOrDefault('d', false)) {
@@ -104,6 +96,11 @@ public class TestPlayer extends Player {
     } else if (keys.getOrDefault('h', false)) {
       playerTank.damage(-5);
     }
+  }
+  
+  public void update() {
+    super.update();
+    turnTo(playerTank.getTurretFacing());
   }
 }
 
@@ -120,7 +117,7 @@ public class Commander extends Player {
     } else if (keys.getOrDefault('e', false)) {
       turnBy(TURN_RATE);
     }
-  };
+  }
 }
 
 public class Driver extends Player {
@@ -130,21 +127,28 @@ public class Driver extends Player {
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
   if (keys.getOrDefault(',', false)) {
-      vehicle.drive();
-      moveTo(vehicle);
+      vehicle.drive(1);
     } else if (keys.getOrDefault('o', false)) {
-      vehicle.back();    
-      moveTo(vehicle);
+      vehicle.drive(-0.5);
+    }
+    
+    if (keys.getOrDefault('\'', false)) {
+      vehicle.turn(-0.5);
+    } else if (keys.getOrDefault('.', false)) {
+      vehicle.turn(0.5);
     }
     
     if (keys.getOrDefault('a', false)) {
       vehicle.turn(-1);
-      turnTo(vehicle.getFacing());
     } else if (keys.getOrDefault('e', false)) {
       vehicle.turn(1);
-      turnTo(vehicle.getFacing());
     }
-  };
+  }
+  
+  public void update() {
+    super.update();
+    turnTo(vehicle.getFacing());
+  }
 }
 
 public class Gunner extends Player {
@@ -155,18 +159,19 @@ public class Gunner extends Player {
   public void handleKeyInput(Map<Character, Boolean> keys) {
      if (keys.getOrDefault('a', false)) {
       vehicle.aimTurret(-1);
-      testPlayer.turnTo(vehicle.getTurretFacing());
     } else if (keys.getOrDefault('e', false)) {
       vehicle.aimTurret(1);
-      testPlayer.turnTo(vehicle.getTurretFacing());
     }
     
     if (keys.getOrDefault('\'', false)) {
       vehicle.aimTurret(-0.5);
-      testPlayer.turnTo(vehicle.getTurretFacing());
     } else if (keys.getOrDefault('.', false)) {
       vehicle.aimTurret(0.5);
-      testPlayer.turnTo(vehicle.getTurretFacing());
     }
-  };
+  }
+  
+  public void update() {
+    super.update();
+    turnTo(vehicle.getTurretFacing());
+  }
 }

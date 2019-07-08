@@ -32,20 +32,22 @@ static class PartBuilder {
 
 enum Hull implements Collideable, Renderable{
   
-  TEST(70,20.0,70,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54);
+  TEST(70,20.0,70,2.5,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54);
   
   public final float mass;
   public final int maxHealth;
   public final float armor;
+  public final float groundResistance;
   
   //TODO: collision polygon
   private final Shape collision;
   protected final PShape render;
   
-  private Hull(int maxHealth, float mass, float armor, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
+  private Hull(int maxHealth, float mass, float armor, float groundResistance, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
     this.maxHealth=maxHealth;
     this.mass=mass;
     this.armor=armor;
+    this.groundResistance=groundResistance;
     this.collision = PartBuilder.createCollision(xPoints,yPoints,points);
     this.render = PartBuilder.createRender(xPoints,yPoints,points,fill,stroke);
   }
@@ -123,14 +125,16 @@ enum Cannon implements Renderable {
 }
 
 enum Engine {
-  TEST(150,5.0),
-  WEAK(75,3.0);
+  TEST(150,1.0,5.0),
+  WEAK(75,0.7,3.0);
   
   public final int power;
+  public final float traversePower;
   public final float mass;
   
-  private Engine(int power,float mass) {
+  private Engine(int power, float traversePower, float mass) {
     this.power=power;
+    this.traversePower=traversePower;
     this.mass=mass;
   }
 }

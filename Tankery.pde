@@ -46,7 +46,7 @@ void setup() {
 void draw() {
   background(255);
   
-  handleMovement();
+  handleKeys();
   updateAll();
   handleCollisions();
   renderAll();
@@ -66,7 +66,6 @@ public void updateAll() {
   }
   projectiles.removeAll(deadProjectiles);
   deadProjectiles.clear();
-  println(deadProjectiles);
   entities.removeAll(toRemove);
   toRemove.clear();
 }

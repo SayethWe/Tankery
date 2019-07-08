@@ -10,6 +10,11 @@ void keyReleased() {
   keys.put(Character.toLowerCase(key),false);
 }
 
-void handleMovement() {
+void handleKeys() {
+  if (keys.getOrDefault('s', false)) {
+    stop();
+    delay(2500);
+    exit();
+  }
   testPlayer.handleKeyInput(keys);
 }

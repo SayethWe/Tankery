@@ -38,4 +38,6 @@ Loaders(and bow/machine gunners) existed, but I don't see that as being a partic
 
 ---
 
-Moved to Top-Down.
+Moved to Top-Down view for demo purposes.
+
+Current state: static enemy tanks, all made from TEST parts. Shooting, movement, implemented fog.

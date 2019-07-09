@@ -52,18 +52,20 @@ void handleFog() {
   rect(0,tpy+tpv,tpx+tpv, height);
 }
 
-void addAlert(float x, float y, color col){
-  alerts.add(new Alert(x,y,col));
+int addAlert(float x, float y, AlertLevel level){
+  alerts.add(new Alert(x,y,level));
+  logger.log(level + " alert spawned at " +x+","+y);
+  return level.duration/3;
 }
 
 class Alert{
-  public static final color ALERT_ORANGE = #FF6700;
-  public static final color ALERT_BLUE = #83DBF5;
-  public static final color ALERT_PINK = #FF36EB;
   
-  private static final int DURATION = 90;
-  private static final int FLASH_ON=5;
-  private static final int FLASH_OFF=7;
+  //private static final int DURATION = 90;
+  //private static final int FLASH_ON=5;
+  //private static final int FLASH_OFF=7;
+  
+  private final int flashOn;
+  private final int flashOff;
   
   private final PShape render;
   private final float x,y;
@@ -71,12 +73,14 @@ class Alert{
   private int flashTimer = 0;
   private boolean flash = false;
   
-  public Alert(float x, float y, color col) {
+  public Alert(float x, float y, AlertLevel level) {
     this.x = x;
     this.y = y;
-    this.render=createShape();
-    this.durationTimer=DURATION;
+    this.flashOn=level.on;
+    this.flashOff=level.off;
+    this.durationTimer=level.duration;
     
+    this.render=createShape();
     render.beginShape();
     render.vertex(0,0);
     render.vertex(3,-3);
@@ -88,7 +92,7 @@ class Alert{
     render.vertex(-3,-3);
     render.endShape(CLOSE);
     render.setStroke(false);
-    render.setFill(col);
+    render.setFill(level.col);
   }
   
   public void update() {
@@ -98,9 +102,9 @@ class Alert{
     if(flashTimer<=0) {
       flash=!flash;
       if(flash) {
-        flashTimer=FLASH_ON;
+        flashTimer=flashOn;
       } else {
-        flashTimer=FLASH_OFF;
+        flashTimer=flashOff;
       }
     }
   }
@@ -117,4 +121,21 @@ class Alert{
     popMatrix();
     }
   }
+}
+
+enum AlertLevel {
+  ORANGE(#FF6700,90,5,7),
+  BLUE(#83DBF5,60,10,16),
+  PINK(#FF36EB,45,15,15);
+  
+  public final color col;
+  public final int duration,on,off;
+  
+  private AlertLevel(color col, int duration, int on, int off) {
+    this.col=col;
+    this.duration=duration;
+    this.on=on;
+    this.off=off;
+  }
+  
 }

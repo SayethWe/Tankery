@@ -55,6 +55,7 @@ class Projectile extends Entity{
   
   private void arm() {
     projectiles.add(this);
+    logger.log(this+ "armed at "+x+","+y+" with heading "+facing+"rad");
   }
   
   public int getDamage() {

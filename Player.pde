@@ -117,7 +117,7 @@ public class TestPlayer extends Player {
 
 public class Commander extends Player {
   private static final float TURN_RATE = PI/15;
-  private static final int ALERT_COOLDOWN = 50;
+  //private static final int ALERT_COOLDOWN = 50;
   
   private int alertTimer;
   
@@ -153,8 +153,7 @@ public class Commander extends Player {
       if(alertTimer<=0) {
         float alertX = x+getViewDist()*cos(facing);
         float alertY = y+getViewDist()*sin(facing);
-        addAlert(alertX, alertY, Alert.ALERT_ORANGE);
-        alertTimer=ALERT_COOLDOWN;
+        alertTimer=addAlert(alertX, alertY, AlertLevel.ORANGE);
       }
     }
   }

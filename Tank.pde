@@ -1,4 +1,6 @@
-class Tank extends Entity {
+import java.awt.geom.Area;
+
+class Tank extends Entity implements Hittable{
   private final Hull hull;
   private final Turret turret;
   private final Cannon cannon;
@@ -34,6 +36,11 @@ class Tank extends Entity {
     this.traverse=PI*engine.traversePower/(mass+hull.groundResistance);
   }
   
+  protected void addToTrackers() {
+    hittables.add(this);
+    super.addToTrackers();
+  }
+  
   public void turnTurretBy(float delTheta) {
     turretFacing+=delTheta;
   }
@@ -54,6 +61,16 @@ class Tank extends Entity {
     render(cannon,turretFacing);
   }
   
+  public boolean contains(Shape collider) {
+    //TODO: Use java.awt.shape for collision detection
+    //return(dist(this.x,this.y,x,y)<20);
+    return(collide(hull,facing,collider)||collide(turret,turretFacing,collider));
+  }
+  public float getThickness(float angle) {
+    float incidence=(facing-angle)%TWO_PI;
+    return hull.armor/sin(incidence);
+  }
+  
   public void render(Renderable r, float facing) {
     pushMatrix();
     translate(x,y);
@@ -62,21 +79,13 @@ class Tank extends Entity {
     popMatrix();
   }
   
-  public boolean collide(Collideable c, float facing, float checkX, float checkY) {
+  public boolean collide(Collideable c, float facing, Shape other) {
     AffineTransform at = new AffineTransform();
     at.translate(x,y);
     at.rotate(facing);
-    Shape collider = at.createTransformedShape(c.getCollider());
-    return collider.contains(checkX,checkY);
-  }
-  
-  public boolean contains(float x, float y) {
-    //TODO: Use java.awt.shape for collision detection
-    //return(dist(this.x,this.y,x,y)<20);
-    return(collide(hull,facing,x,y)||collide(turret,turretFacing,x,y));
-  }
-  public float getThickness() {
-    return hull.armor;
+    Area collider = new Area(at.createTransformedShape(c.getCollider()));
+    collider.intersect(new Area(other));
+    return !collider.isEmpty();
   }
   
   public int getHealth() {
@@ -84,7 +93,7 @@ class Tank extends Entity {
   }
   
   public float getTurretFacing() {
-    return turretFacing;
+   return turretFacing;
   }
   
   public void fire() {

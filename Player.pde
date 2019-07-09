@@ -57,16 +57,6 @@ abstract class Player extends Entity {
     viewCoolDown--;
   }
 
-  public boolean contains(float x, float y) {
-    return false;
-  }
-  public void damage(int damage) {
-  }
-  
-  public float getThickness() {
-    return 0;
-  }
-
   abstract public void handleKeyInput(Map<Character, Boolean> keys);
 }
 

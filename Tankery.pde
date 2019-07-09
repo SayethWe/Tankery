@@ -18,21 +18,20 @@ Player testDriver;
 Player testGunner;
 
 public static final Set<Entity>entities=new HashSet<Entity>();
-public static final Set<Projectile>projectiles=new HashSet<Projectile>();
+public static final Set<Impactor>impactors=new HashSet<Impactor>();
+public static final Set<Hittable>hittables=new HashSet<Hittable>();
 
 Set<Entity>toRemove=new HashSet<Entity>();
-Set<Projectile>deadProjectiles=new HashSet<Projectile>();
 
 Logger logger;
 
 void setup() {
   instance = this;
   logger = new Logger("logs/Tankery_");
-  //registerDispose(e->{};);
   registerMethod("dispose",this);
   
   size(750,750);
-  surface.setResizable(true);
+  //surface.setResizable(true);
   noSmooth();
   
   
@@ -53,7 +52,7 @@ void draw() {
   handleKeys();
   updateAll();
   handleCollisions();
-  renderAll();
+  //renderAll();
   handleFog(); //Must be penultimate call
   drawUI(); //must be last call
 }
@@ -67,27 +66,40 @@ void dispose() {
 public void updateAll() {
   for (Entity e:entities){
     e.update();
+    e.render();
   }
-  projectiles.removeAll(deadProjectiles);
-  deadProjectiles.clear();
+  impactors.removeAll(toRemove);
   entities.removeAll(toRemove);
+  hittables.removeAll(toRemove);
   toRemove.clear();
 }
 
 public void handleCollisions() {
-  for(Projectile p : projectiles) {
-    for(Entity e:entities) {
-      if(e.contains(p.getX(),p.getY())&&!p.equals(e)) {
-        e.damage(p.impact(e.getFacing(),e.getThickness()));
+  for(Impactor i :impactors) {
+    for(Hittable h: hittables) {
+      if(h.contains(i.getCollider())) {
+        h.damage(i.impact(h.getThickness(i.getFacing())));
       }
     }
   }
 }
 
-public void renderAll() {
-  for (Entity e:entities){
-    e.render();
-  }
+//public void renderAll() {
+//  for (Entity e:entities){
+//    e.render();
+//  }
+//}
+
+interface Hittable {
+  public boolean contains(Shape collider);
+  public void damage(int damage);
+  public float getThickness(float incident);
+}
+
+interface Impactor {
+  public int impact(float thickness);
+  public float getFacing();
+  public Shape getCollider();
 }
 
 public abstract class Entity {
@@ -97,6 +109,7 @@ public abstract class Entity {
     this.x=x;
     this.y=y;
     this.facing=facing;
+    addToTrackers();
   }
   
   public void markToRemove() {
@@ -124,9 +137,9 @@ public abstract class Entity {
     facing=(theta+TWO_PI)%TWO_PI;
   }
   
-  abstract void render();
-  abstract void update();
-  abstract float getThickness();
-  abstract void damage(int damage);
-  abstract boolean contains(float x, float y);
+  protected void addToTrackers() {
+    entities.add(this);
+  }
+  public abstract void render();
+  public abstract void update();
 }

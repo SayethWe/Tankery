@@ -1,4 +1,6 @@
-class Projectile extends Entity{
+import java.awt.geom.Ellipse2D;
+
+class Projectile extends Entity implements Impactor{
   private static final float PEN_LOSS_ON_BOUNCE = 0.1;
   private static final float DAMAGE_VARIANCE = 0.1;
   private static final float MAX_DAMAGE_VARIANCE = 0.3;
@@ -9,13 +11,19 @@ class Projectile extends Entity{
   final float meanDamage;
   final float caliber;
   byte age = 0;
+  private boolean armed=false;
   
-  public Projectile(float x, float y,float angle, float penetration,float velocity,float damage,float caliber) {
+  public Projectile(float x, float y, float angle, float penetration,float velocity,float damage,float caliber) {
     super(x,y,angle);
     this.penetration=penetration;
     this.velocity=velocity;
     this.meanDamage=damage;
     this.caliber=caliber;
+  }
+  
+  protected void addToTrackers() {
+    impactors.add(this);
+    super.addToTrackers();
   }
   
   public void update() {
@@ -28,13 +36,6 @@ class Projectile extends Entity{
     if(age==FUSE) arm();
   }
   
-  @Override
-  public void markToRemove() {
-     super.markToRemove();
-     deadProjectiles.add(this);
-     //logger.log(getDamage());
-  }
-  
   public void render() {
     fill(0);
     noStroke();
@@ -42,19 +43,22 @@ class Projectile extends Entity{
     ellipse(x,y,caliber,caliber);
   }
   
-  public int impact(float angle, float thickness) {
-    float incidence = facing-angle;
-    float effectiveThickness=abs(thickness/sin(incidence));
-    markToRemove();
-    if(effectiveThickness<penetration) {
+  public int impact(float thickness) {
+    if(thickness<penetration&&armed) {
+      markToRemove();
       return getDamage();
     } else {
       return 0;
     }
   }
   
+  public Shape getCollider() {
+    return new Ellipse2D.Float(x,y,caliber,caliber);
+  }
+  
   private void arm() {
-    projectiles.add(this);
+    //projectiles.add(this);
+    armed=true;
     logger.log(this+ "armed at "+x+","+y+" with heading "+facing+"rad");
   }
   
@@ -63,14 +67,4 @@ class Projectile extends Entity{
     float maxVariance = MAX_DAMAGE_VARIANCE*meanDamage;
     return int(clampedGaussian(meanDamage, variance, meanDamage-maxVariance, meanDamage+maxVariance));
   }
-  
-  public boolean contains(float x, float y) {
-    return(x==this.x&&y==this.y);
-  }
-  public float getThickness() {
-    return 0; 
-  }
-  public void damage(int damage){
-    this.markToRemove();
-  };
 }

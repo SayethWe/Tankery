@@ -5,24 +5,25 @@ import java.util.stream.*;
 Map<Keybind,Boolean>keys=new EnumMap<Keybind,Boolean>(Keybind.class);
 
 Map<Character,Keybind>keybinds = dvorakLayout();
+//Map<Character,Keybind>keybinds = qwertyLayout();
 
 void keyPressed() {
   if(key!=CODED){
     keys.put(keybinds.getOrDefault(Character.toLowerCase(key),Keybind.UNKNOWN),true);
     switch(Character.toLowerCase(key)) {
-      case 'g':
+      case '1':
       testPlayer=testGunner;
       break;
-      case 'c':
+      case '2':
       testPlayer = testCommander;
       break;
-      case 'r':
+      case '3':
       testPlayer=testDriver;
       break;
-      case 'd':
+      case '[':
       playerTank.damage(1);
       break;
-      case 'h':
+      case ']':
       playerTank.damage(-5);
       break;
       case '=':
@@ -61,6 +62,18 @@ Map<Character,Keybind> dvorakLayout() {
   result.put('a',Keybind.LEFT);
   result.put('o',Keybind.BACK);
   result.put('e',Keybind.RIGHT);
+  result.put(' ',Keybind.ACTION);
+  return result;
+}
+
+Map<Character,Keybind> qwertyLayout() {
+  Map<Character,Keybind> result = new HashMap<Character,Keybind>();
+  result.put('q',Keybind.SLOW_LEFT);
+  result.put('w',Keybind.FRONT);
+  result.put('e',Keybind.SLOW_RIGHT);
+  result.put('a',Keybind.LEFT);
+  result.put('s',Keybind.BACK);
+  result.put('d',Keybind.RIGHT);
   result.put(' ',Keybind.ACTION);
   return result;
 }

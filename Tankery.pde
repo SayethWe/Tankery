@@ -13,6 +13,10 @@ static Tankery instance;
 Player testPlayer;
 Tank playerTank;
 
+Player testCommander;
+Player testDriver;
+Player testGunner;
+
 public static final Set<Entity>entities=new HashSet<Entity>();
 public static final Set<Projectile>projectiles=new HashSet<Projectile>();
 
@@ -36,10 +40,10 @@ void setup() {
   entities.add(new Tank(200,300,PI/3,PI/2));
   entities.add(new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST));
   //testPlayer = new TestPlayer();
-  testPlayer = new Commander(playerTank);
-  //testPlayer=new Gunner(playerTank);
-  //testPlayer=new Driver(playerTank);
-  entities.add(testPlayer);
+  entities.add(testCommander = new Commander(playerTank));
+  entities.add(testGunner=new Gunner(playerTank));
+  entities.add(testDriver=new Driver(playerTank));
+  entities.add(testPlayer=testCommander);
   logger.log("Startup sucessful");
 }
 

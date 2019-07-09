@@ -3,11 +3,25 @@ import java.util.Map;
 Map<Character,Boolean>keys=new HashMap<Character,Boolean>();
 
 void keyPressed() {
-  keys.put(Character.toLowerCase(key),true);
+  if(key!=CODED){
+    keys.put(Character.toLowerCase(key),true);
+    switch(Character.toLowerCase(key)) {
+      case 'g':
+      testPlayer=testGunner;
+      break;
+      case 'c':
+      testPlayer = testCommander;
+      break;
+      case 'r':
+      testPlayer=testDriver;
+    }
+  }
 }
 
 void keyReleased() {
-  keys.put(Character.toLowerCase(key),false);
+  if(key!=CODED){
+    keys.put(Character.toLowerCase(key),false);
+  }
 }
 
 void handleKeys() {

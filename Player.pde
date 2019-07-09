@@ -117,9 +117,17 @@ public class TestPlayer extends Player {
 
 public class Commander extends Player {
   private static final float TURN_RATE = PI/15;
+  private static final int ALERT_COOLDOWN = 50;
+  
+  private int alertTimer;
   
   public Commander(Tank vehicle) {
     super(vehicle, new ViewField(3*PI/4, 120,2),new ViewField(3*PI/7,200,3),new ViewField(PI/6,300,5));
+  }
+  
+  public void update() {
+    super.update();
+    alertTimer--;
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -139,6 +147,17 @@ public class Commander extends Player {
       changeView(1);
     } else if (keys.getOrDefault('o', false)) {
       changeView(-1);
+    }
+    
+    if (keys.getOrDefault(' ', false)) {
+      //println("trying alert" +alertTimer);
+      //drop alert
+      if(alertTimer<=0) {
+        float alertX = x+getViewDist()*cos(facing);
+        float alertY = y+getViewDist()*sin(facing);
+        addAlert(alertX, alertY, Alert.ALERT_ORANGE);
+        alertTimer=ALERT_COOLDOWN;
+      }
     }
   }
 }
@@ -166,6 +185,8 @@ public class Driver extends Player {
     } else if (keys.getOrDefault('e', false)) {
       vehicle.turn(1);
     }
+    
+    //kind of want a spacebar action here
   }
   
   public void update() {
@@ -176,7 +197,7 @@ public class Driver extends Player {
 
 public class Gunner extends Player {
   public Gunner(Tank vehicle) {
-    super(vehicle, new ViewField(PI/6, 70, 1),new ViewField(PI/10,140,2));
+    super(vehicle, new ViewField(PI/6, 70, 1), new ViewField(PI/10,140,2));
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -196,6 +217,10 @@ public class Gunner extends Player {
       changeView(1);
     } else if (keys.getOrDefault('o', false)) {
       changeView(-1);
+    }
+    
+    if (keys.getOrDefault(' ', false)) {
+      playerTank.fire();
     }
   }
   

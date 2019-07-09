@@ -15,7 +15,7 @@ abstract class Player extends Entity {
   //private float x;
   //private float y;
 
-  public Player(ViewField[] viewFields, Tank vehicle) {
+  public Player(Tank vehicle, ViewField... viewFields) {
     super(vehicle.getX(), vehicle.getY(), vehicle.getFacing());
     this.viewFields=viewFields;
     this.viewFieldMax=viewFields.length-1;
@@ -76,7 +76,7 @@ public class TestPlayer extends Player {
   }
   
   public TestPlayer(Tank vehicle) {
-     super(new ViewField[]{new ViewField(TWO_PI, 200, 3)},vehicle);
+     super(vehicle, new ViewField(TWO_PI, 200, 3));
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -119,7 +119,7 @@ public class Commander extends Player {
   private static final float TURN_RATE = PI/15;
   
   public Commander(Tank vehicle) {
-    super(new ViewField[]{new ViewField(3*PI/4, 120,2),new ViewField(3*PI/5,200,3),new ViewField(PI/6,300,5)}, vehicle);
+    super(vehicle, new ViewField(3*PI/4, 120,2),new ViewField(3*PI/7,200,3),new ViewField(PI/6,300,5));
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -145,7 +145,7 @@ public class Commander extends Player {
 
 public class Driver extends Player {
   public Driver(Tank vehicle) {
-    super(new ViewField[]{new ViewField(PI/2, 160, 2)}, vehicle);
+    super(vehicle, new ViewField(PI/2, 160, 2));
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {
@@ -176,7 +176,7 @@ public class Driver extends Player {
 
 public class Gunner extends Player {
   public Gunner(Tank vehicle) {
-    super(new ViewField[]{new ViewField(PI/6, 70, 1),new ViewField(PI/10,140,2)}, vehicle);
+    super(vehicle, new ViewField(PI/6, 70, 1),new ViewField(PI/10,140,2));
   }
   
   public void handleKeyInput(Map<Character, Boolean> keys) {

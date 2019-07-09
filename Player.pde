@@ -57,7 +57,7 @@ abstract class Player extends Entity {
     viewCoolDown--;
   }
 
-  abstract public void handleKeyInput(Map<Character, Boolean> keys);
+  abstract public void handleKeyInput(Map<Keybind, Boolean> keys);
 }
 
 public class TestPlayer extends Player {
@@ -69,33 +69,27 @@ public class TestPlayer extends Player {
      super(vehicle, new ViewField(TWO_PI, 200, 3));
   }
   
-  public void handleKeyInput(Map<Character, Boolean> keys) {
-    if (keys.getOrDefault(',', false)) {
+  public void handleKeyInput(Map<Keybind, Boolean> keys) {
+    if (keys.getOrDefault(Keybind.FRONT, false)) {
       playerTank.drive(1);
-    } else if (keys.getOrDefault('o', false)) {
+    } else if (keys.getOrDefault(Keybind.BACK, false)) {
       playerTank.drive(-0.5);
     }
 
-    if (keys.getOrDefault('a', false)) {
+    if (keys.getOrDefault(Keybind.LEFT, false)) {
       playerTank.turn(-1);
-    } else if (keys.getOrDefault('e', false)) {
+    } else if (keys.getOrDefault(Keybind.RIGHT, false)) {
       playerTank.turn(1);
     }
 
-    if (keys.getOrDefault('\'', false)) {
+    if (keys.getOrDefault(Keybind.SLOW_LEFT, false)) {
       playerTank.aimTurret(-1);
-    } else if (keys.getOrDefault('.', false)) {
+    } else if (keys.getOrDefault(Keybind.SLOW_RIGHT, false)) {
       playerTank.aimTurret(1);
     }
 
-    if (keys.getOrDefault(' ', false)) {
+    if (keys.getOrDefault(Keybind.ACTION, false)) {
       playerTank.fire();
-    }
-
-    if (keys.getOrDefault('d', false)) {
-      playerTank.damage(1);
-    } else if (keys.getOrDefault('h', false)) {
-      playerTank.damage(-5);
     }
   }
   
@@ -120,31 +114,33 @@ public class Commander extends Player {
     alertTimer--;
   }
   
-  public void handleKeyInput(Map<Character, Boolean> keys) {
-    if (keys.getOrDefault('a', false)) {
+  private void alert() {
+    if(alertTimer<=0) {
+      float alertX = x+getViewDist()*cos(facing);
+      float alertY = y+getViewDist()*sin(facing);
+      alertTimer=addAlert(alertX, alertY, AlertLevel.ORANGE);
+    }
+  }
+  
+  public void handleKeyInput(Map<Keybind, Boolean> keys) {
+    if (keys.getOrDefault(Keybind.LEFT, false)) {
       turnBy(-TURN_RATE);
-    } else if (keys.getOrDefault('e', false)) {
+    } else if (keys.getOrDefault(Keybind.RIGHT, false)) {
       turnBy(TURN_RATE);
-    } else if (keys.getOrDefault('\'', false)) {
+    } else if (keys.getOrDefault(Keybind.SLOW_LEFT, false)) {
       turnBy(-TURN_RATE/2);
-    } else if (keys.getOrDefault('.', false)) {
+    } else if (keys.getOrDefault(Keybind.SLOW_RIGHT, false)) {
       turnBy(TURN_RATE/2);
     }
     
-    if (keys.getOrDefault(',', false)) {
+    if (keys.getOrDefault(Keybind.FRONT, false)) {
       changeView(1);
-    } else if (keys.getOrDefault('o', false)) {
+    } else if (keys.getOrDefault(Keybind.BACK, false)) {
       changeView(-1);
     }
     
-    if (keys.getOrDefault(' ', false)) {
-      //println("trying alert" +alertTimer);
-      //drop alert
-      if(alertTimer<=0) {
-        float alertX = x+getViewDist()*cos(facing);
-        float alertY = y+getViewDist()*sin(facing);
-        alertTimer=addAlert(alertX, alertY, AlertLevel.ORANGE);
-      }
+    if (keys.getOrDefault(Keybind.ACTION, false)) {
+      alert();
     }
   }
 }
@@ -154,20 +150,20 @@ public class Driver extends Player {
     super(vehicle, new ViewField(PI/2, 160, 2));
   }
   
-  public void handleKeyInput(Map<Character, Boolean> keys) {
-  if (keys.getOrDefault(',', false)) {
+  public void handleKeyInput(Map<Keybind, Boolean> keys) {
+  if (keys.getOrDefault(Keybind.FRONT, false)) {
       vehicle.drive(1);
-    } else if (keys.getOrDefault('o', false)) {
+    } else if (keys.getOrDefault(Keybind.BACK, false)) {
       vehicle.drive(-0.5);
     }
     
-    if (keys.getOrDefault('\'', false)) {
+    if (keys.getOrDefault(Keybind.SLOW_LEFT, false)) {
       vehicle.turn(-0.5);
-    } else if (keys.getOrDefault('.', false)) {
+    } else if (keys.getOrDefault(Keybind.SLOW_RIGHT, false)) {
       vehicle.turn(0.5);
-    } else if (keys.getOrDefault('a', false)) {
+    } else if (keys.getOrDefault(Keybind.LEFT, false)) {
       vehicle.turn(-1);
-    } else if (keys.getOrDefault('e', false)) {
+    } else if (keys.getOrDefault(Keybind.RIGHT, false)) {
       vehicle.turn(1);
     }
     
@@ -185,24 +181,24 @@ public class Gunner extends Player {
     super(vehicle, new ViewField(PI/6, 70, 1), new ViewField(PI/10,140,2));
   }
   
-  public void handleKeyInput(Map<Character, Boolean> keys) {
-     if (keys.getOrDefault('a', false)) {
+  public void handleKeyInput(Map<Keybind, Boolean> keys) {
+     if (keys.getOrDefault(Keybind.LEFT, false)) {
       vehicle.aimTurret(-1);
-    } else if (keys.getOrDefault('e', false)) {
+    } else if (keys.getOrDefault(Keybind.RIGHT, false)) {
       vehicle.aimTurret(1);
-    } else if (keys.getOrDefault('\'', false)) {
+    } else if (keys.getOrDefault(Keybind.SLOW_LEFT, false)) {
       vehicle.aimTurret(-0.5);
-    } else if (keys.getOrDefault('.', false)) {
+    } else if (keys.getOrDefault(Keybind.SLOW_RIGHT, false)) {
       vehicle.aimTurret(0.5);
     }
     
-    if (keys.getOrDefault(',', false)) {
+    if (keys.getOrDefault(Keybind.FRONT, false)) {
       changeView(1);
-    } else if (keys.getOrDefault('o', false)) {
+    } else if (keys.getOrDefault(Keybind.BACK, false)) {
       changeView(-1);
     }
     
-    if (keys.getOrDefault(' ', false)) {
+    if (keys.getOrDefault(Keybind.ACTION, false)) {
       playerTank.fire();
     }
   }

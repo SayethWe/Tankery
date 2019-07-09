@@ -1,10 +1,14 @@
 import java.util.Map;
+import java.util.EnumMap;
+import java.util.stream.*;
 
-Map<Character,Boolean>keys=new HashMap<Character,Boolean>();
+Map<Keybind,Boolean>keys=new EnumMap<Keybind,Boolean>(Keybind.class);
+
+Map<Character,Keybind>keybinds = dvorakLayout();
 
 void keyPressed() {
   if(key!=CODED){
-    keys.put(Character.toLowerCase(key),true);
+    keys.put(keybinds.getOrDefault(Character.toLowerCase(key),Keybind.DEFAULT),true);
     switch(Character.toLowerCase(key)) {
       case 'g':
       testPlayer=testGunner;
@@ -14,21 +18,49 @@ void keyPressed() {
       break;
       case 'r':
       testPlayer=testDriver;
+      break;
+      case 'd':
+      playerTank.damage(1);
+      break;
+      case 'h':
+      playerTank.damage(-5);
+      break;
+      case '=':
+      stop();
+      exit();
     }
   }
 }
 
 void keyReleased() {
   if(key!=CODED){
-    keys.put(Character.toLowerCase(key),false);
+    keys.put(keybinds.getOrDefault(Character.toLowerCase(key),Keybind.DEFAULT),false);
   }
 }
 
 void handleKeys() {
-  if (keys.getOrDefault('s', false)) {
-    stop();
-    delay(2500);
-    exit();
-  }
   testPlayer.handleKeyInput(keys);
+}
+
+enum Keybind {
+  FRONT(),
+  BACK(),
+  LEFT(),
+  RIGHT(),
+  ACTION(),
+  SLOW_LEFT(),
+  SLOW_RIGHT(),
+  DEFAULT();
+}
+
+Map<Character,Keybind> dvorakLayout() {
+  Map<Character,Keybind> result = new HashMap<Character,Keybind>();
+  result.put('\'',Keybind.SLOW_LEFT);
+  result.put(',',Keybind.FRONT);
+  result.put('.',Keybind.SLOW_RIGHT);
+  result.put('a',Keybind.LEFT);
+  result.put('o',Keybind.BACK);
+  result.put('e',Keybind.RIGHT);
+  result.put(' ',Keybind.ACTION);
+  return result;
 }

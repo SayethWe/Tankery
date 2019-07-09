@@ -135,9 +135,7 @@ public class Commander extends Player {
       turnBy(-TURN_RATE);
     } else if (keys.getOrDefault('e', false)) {
       turnBy(TURN_RATE);
-    }
-    
-    if (keys.getOrDefault('\'', false)) {
+    } else if (keys.getOrDefault('\'', false)) {
       turnBy(-TURN_RATE/2);
     } else if (keys.getOrDefault('.', false)) {
       turnBy(TURN_RATE/2);
@@ -178,9 +176,7 @@ public class Driver extends Player {
       vehicle.turn(-0.5);
     } else if (keys.getOrDefault('.', false)) {
       vehicle.turn(0.5);
-    }
-    
-    if (keys.getOrDefault('a', false)) {
+    } else if (keys.getOrDefault('a', false)) {
       vehicle.turn(-1);
     } else if (keys.getOrDefault('e', false)) {
       vehicle.turn(1);
@@ -205,9 +201,7 @@ public class Gunner extends Player {
       vehicle.aimTurret(-1);
     } else if (keys.getOrDefault('e', false)) {
       vehicle.aimTurret(1);
-    }
-    
-    if (keys.getOrDefault('\'', false)) {
+    } else if (keys.getOrDefault('\'', false)) {
       vehicle.aimTurret(-0.5);
     } else if (keys.getOrDefault('.', false)) {
       vehicle.aimTurret(0.5);

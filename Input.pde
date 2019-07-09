@@ -8,7 +8,7 @@ Map<Character,Keybind>keybinds = dvorakLayout();
 
 void keyPressed() {
   if(key!=CODED){
-    keys.put(keybinds.getOrDefault(Character.toLowerCase(key),Keybind.DEFAULT),true);
+    keys.put(keybinds.getOrDefault(Character.toLowerCase(key),Keybind.UNKNOWN),true);
     switch(Character.toLowerCase(key)) {
       case 'g':
       testPlayer=testGunner;
@@ -34,12 +34,15 @@ void keyPressed() {
 
 void keyReleased() {
   if(key!=CODED){
-    keys.put(keybinds.getOrDefault(Character.toLowerCase(key),Keybind.DEFAULT),false);
+    keys.put(keybinds.getOrDefault(Character.toLowerCase(key),Keybind.UNKNOWN),false);
   }
 }
 
 void handleKeys() {
-  testPlayer.handleKeyInput(keys);
+  //TODO: use Streams and filter
+  for (Keybind kb : keys.keySet()) {
+    if (keys.get(kb)) testPlayer.handleKeyInput(kb);   
+  }
 }
 
 enum Keybind {
@@ -50,7 +53,7 @@ enum Keybind {
   ACTION(),
   SLOW_LEFT(),
   SLOW_RIGHT(),
-  DEFAULT();
+  UNKNOWN();
 }
 
 Map<Character,Keybind> dvorakLayout() {

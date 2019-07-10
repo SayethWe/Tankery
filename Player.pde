@@ -143,16 +143,16 @@ public class Commander extends Player {
       break;
       
       case LEFT:
-      turnBy(-TURN_RATE);
+      turnBy(-3*TURN_RATE/4);
       break;
       case RIGHT:
-      turnBy(TURN_RATE);
+      turnBy(3*TURN_RATE/4);
       break;
       case SLOW_LEFT:
-      turnBy(-TURN_RATE/2);
+      turnBy(-TURN_RATE/4);
       break;
       case SLOW_RIGHT:
-      turnBy(TURN_RATE/2);
+      turnBy(TURN_RATE/4);
       break;
       
       case ACTION:
@@ -183,15 +183,15 @@ public class Driver extends Player {
       break;
       
       case LEFT:
-      vehicle.turn(-0.5);
+      vehicle.turn(-0.75);
       case SLOW_LEFT:
-      vehicle.turn(-0.5);
+      vehicle.turn(-0.25);
       break;
       
       case RIGHT:
-      vehicle.turn(0.5);
+      vehicle.turn(0.75);
       case SLOW_RIGHT:
-      vehicle.turn(0.5);
+      vehicle.turn(0.25);
       break;
       
       case ACTION:
@@ -218,18 +218,21 @@ public class Gunner extends Player {
     switch(kb) {
       case FRONT:
       changeView(1);
+      break;
       case BACK:
       changeView(-1);
+      break;
       
       case LEFT:
-      vehicle.aimTurret(-0.5);
+      vehicle.aimTurret(-0.75);
       case SLOW_LEFT:
-      vehicle.aimTurret(-0.5);
+      vehicle.aimTurret(-0.25);
       break;
+      
       case RIGHT:
-      vehicle.aimTurret(0.5);
+      vehicle.aimTurret(0.75);
       case SLOW_RIGHT:
-      vehicle.aimTurret(0.5);
+      vehicle.aimTurret(0.25);
       break;
       
       case ACTION:

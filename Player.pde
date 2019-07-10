@@ -57,7 +57,7 @@ abstract class Player extends Entity {
     viewCoolDown--;
   }
 
-  abstract public void handleKeyInput(Map<Keybind, Boolean> keys);
+  abstract public void handleKeyInput(Keybind kb);
 }
 
 public class TestPlayer extends Player {
@@ -69,27 +69,38 @@ public class TestPlayer extends Player {
      super(vehicle, new ViewField(TWO_PI, 200, 3));
   }
   
-  public void handleKeyInput(Map<Keybind, Boolean> keys) {
-    if (keys.getOrDefault(Keybind.FRONT, false)) {
-      playerTank.drive(1);
-    } else if (keys.getOrDefault(Keybind.BACK, false)) {
-      playerTank.drive(-0.5);
-    }
-
-    if (keys.getOrDefault(Keybind.LEFT, false)) {
-      playerTank.turn(-1);
-    } else if (keys.getOrDefault(Keybind.RIGHT, false)) {
-      playerTank.turn(1);
-    }
-
-    if (keys.getOrDefault(Keybind.SLOW_LEFT, false)) {
-      playerTank.aimTurret(-1);
-    } else if (keys.getOrDefault(Keybind.SLOW_RIGHT, false)) {
-      playerTank.aimTurret(1);
-    }
-
-    if (keys.getOrDefault(Keybind.ACTION, false)) {
-      playerTank.fire();
+  public void handleKeyInput(Keybind kb) {
+    switch (kb) {
+      case FRONT:
+      vehicle.drive(1);
+      break;
+      case BACK:
+      vehicle.drive(-0.5);
+      break;
+      
+      case LEFT:
+      vehicle.turn(-1);
+      break;
+      case RIGHT:
+      vehicle.turn(1);
+      break;
+      
+      case SLOW_LEFT:
+      vehicle.aimTurret(-1);
+      break;
+      case SLOW_RIGHT:
+      vehicle.aimTurret(1);
+      break;
+      
+      case ACTION:
+      vehicle.fire();
+      break;
+      
+      case UNKNOWN:
+      break;
+      
+      default:
+      throw new IllegalArgumentException("TestPlayer: Unimplemented Keybind");
     }
   }
   
@@ -122,25 +133,37 @@ public class Commander extends Player {
     }
   }
   
-  public void handleKeyInput(Map<Keybind, Boolean> keys) {
-    if (keys.getOrDefault(Keybind.LEFT, false)) {
-      turnBy(-TURN_RATE);
-    } else if (keys.getOrDefault(Keybind.RIGHT, false)) {
-      turnBy(TURN_RATE);
-    } else if (keys.getOrDefault(Keybind.SLOW_LEFT, false)) {
-      turnBy(-TURN_RATE/2);
-    } else if (keys.getOrDefault(Keybind.SLOW_RIGHT, false)) {
-      turnBy(TURN_RATE/2);
-    }
-    
-    if (keys.getOrDefault(Keybind.FRONT, false)) {
+  public void handleKeyInput(Keybind kb) {
+    switch(kb) {
+      case FRONT:
       changeView(1);
-    } else if (keys.getOrDefault(Keybind.BACK, false)) {
+      break;
+      case BACK:
       changeView(-1);
-    }
-    
-    if (keys.getOrDefault(Keybind.ACTION, false)) {
+      break;
+      
+      case LEFT:
+      turnBy(-3*TURN_RATE/4);
+      break;
+      case RIGHT:
+      turnBy(3*TURN_RATE/4);
+      break;
+      case SLOW_LEFT:
+      turnBy(-TURN_RATE/4);
+      break;
+      case SLOW_RIGHT:
+      turnBy(TURN_RATE/4);
+      break;
+      
+      case ACTION:
       alert();
+      break;
+      
+      case UNKNOWN:
+      break;
+      
+      default:
+      throw new IllegalArgumentException("Commander: Unimplemented Keybind");
     }
   }
 }
@@ -150,24 +173,34 @@ public class Driver extends Player {
     super(vehicle, new ViewField(PI/2, 160, 2));
   }
   
-  public void handleKeyInput(Map<Keybind, Boolean> keys) {
-  if (keys.getOrDefault(Keybind.FRONT, false)) {
+  public void handleKeyInput(Keybind kb) {
+    switch(kb) {
+      case FRONT:
       vehicle.drive(1);
-    } else if (keys.getOrDefault(Keybind.BACK, false)) {
+      break;
+      case BACK:
       vehicle.drive(-0.5);
+      break;
+      
+      case LEFT:
+      vehicle.turn(-0.75);
+      case SLOW_LEFT:
+      vehicle.turn(-0.25);
+      break;
+      
+      case RIGHT:
+      vehicle.turn(0.75);
+      case SLOW_RIGHT:
+      vehicle.turn(0.25);
+      break;
+      
+      case ACTION:
+      case UNKNOWN:
+      break;
+      
+      default:
+      throw new IllegalArgumentException("Driver: Unimplemented Keybind");
     }
-    
-    if (keys.getOrDefault(Keybind.SLOW_LEFT, false)) {
-      vehicle.turn(-0.5);
-    } else if (keys.getOrDefault(Keybind.SLOW_RIGHT, false)) {
-      vehicle.turn(0.5);
-    } else if (keys.getOrDefault(Keybind.LEFT, false)) {
-      vehicle.turn(-1);
-    } else if (keys.getOrDefault(Keybind.RIGHT, false)) {
-      vehicle.turn(1);
-    }
-    
-    //kind of want a spacebar action here
   }
   
   public void update() {
@@ -181,25 +214,36 @@ public class Gunner extends Player {
     super(vehicle, new ViewField(PI/6, 70, 1), new ViewField(PI/10,140,2));
   }
   
-  public void handleKeyInput(Map<Keybind, Boolean> keys) {
-     if (keys.getOrDefault(Keybind.LEFT, false)) {
-      vehicle.aimTurret(-1);
-    } else if (keys.getOrDefault(Keybind.RIGHT, false)) {
-      vehicle.aimTurret(1);
-    } else if (keys.getOrDefault(Keybind.SLOW_LEFT, false)) {
-      vehicle.aimTurret(-0.5);
-    } else if (keys.getOrDefault(Keybind.SLOW_RIGHT, false)) {
-      vehicle.aimTurret(0.5);
-    }
-    
-    if (keys.getOrDefault(Keybind.FRONT, false)) {
+  public void handleKeyInput(Keybind kb) {
+    switch(kb) {
+      case FRONT:
       changeView(1);
-    } else if (keys.getOrDefault(Keybind.BACK, false)) {
+      break;
+      case BACK:
       changeView(-1);
-    }
-    
-    if (keys.getOrDefault(Keybind.ACTION, false)) {
-      playerTank.fire();
+      break;
+      
+      case LEFT:
+      vehicle.aimTurret(-0.75);
+      case SLOW_LEFT:
+      vehicle.aimTurret(-0.25);
+      break;
+      
+      case RIGHT:
+      vehicle.aimTurret(0.75);
+      case SLOW_RIGHT:
+      vehicle.aimTurret(0.25);
+      break;
+      
+      case ACTION:
+      vehicle.fire();
+      break;
+      
+      case UNKNOWN:
+      break;
+      
+      default:
+      throw new IllegalArgumentException("Gunner: Unimplemented Keybind");
     }
   }
   

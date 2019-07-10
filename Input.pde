@@ -40,7 +40,10 @@ void keyReleased() {
 }
 
 void handleKeys() {
-  testPlayer.handleKeyInput(keys);
+  //TODO: use Streams and filter
+  for (Keybind kb : keys.keySet()) {
+    if (keys.get(kb)) testPlayer.handleKeyInput(kb);   
+  }
 }
 
 enum Keybind {

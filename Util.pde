@@ -18,6 +18,11 @@ static float lessMassive(float a, float b) {
   return (abs(a)>abs(b))?b:a;
 }
 
+static float angleBetween(float a, float b) {
+  float diff = ( a - b + PI ) % TWO_PI - PI;
+  return diff < -PI ? diff + TWO_PI : diff;
+}
+
 String formattedDate(char sep) {
   StringBuilder result = new StringBuilder();
   result.append(nf(year(),4)).append(sep);

@@ -98,6 +98,9 @@ public class TestPlayer extends Player {
       
       case UNKNOWN:
       break;
+      
+      default:
+      throw new IllegalArgumentException("TestPlayer: Unimplemented Keybind");
     }
   }
   
@@ -158,6 +161,9 @@ public class Commander extends Player {
       
       case UNKNOWN:
       break;
+      
+      default:
+      throw new IllegalArgumentException("Commander: Unimplemented Keybind");
     }
   }
 }
@@ -191,6 +197,9 @@ public class Driver extends Player {
       case ACTION:
       case UNKNOWN:
       break;
+      
+      default:
+      throw new IllegalArgumentException("Driver: Unimplemented Keybind");
     }
   }
   
@@ -229,6 +238,9 @@ public class Gunner extends Player {
       
       case UNKNOWN:
       break;
+      
+      default:
+      throw new IllegalArgumentException("Gunner: Unimplemented Keybind");
     }
   }
   

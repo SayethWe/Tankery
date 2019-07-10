@@ -32,7 +32,8 @@ static class PartBuilder {
 
 enum Hull implements Collideable, Renderable{
   
-  TEST(70,20.0,70,2.5,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54);
+  TEST(70,20.0,70,2.5,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54),
+  LIGHT(30,10.0,25,1.0,new float[]{25,15,-15,-20,-15,15},new float[]{0,10,10,0,-10,-10},6,#F50F0F,#F5AC0F);
   
   public final float mass;
   public final int maxHealth;
@@ -63,7 +64,8 @@ enum Hull implements Collideable, Renderable{
 enum Turret implements Collideable, Renderable{
   
   TEST(PI/20,5.0,30,new float[]{20,-10,-10},new float[]{0,17.3,-17.3},3,#6E52FF,#6E52FF),
-  PENT(PI/25,6.0,45,new float[]{20.00, 6.18, -16.18, -16.18, 6.18}, new float[]{0.00, 19.02, 11.76, -11.76, -19.02}, 5, #87F4F5, #225D67);
+  PENT(PI/25,6.0,45,new float[]{20.00, 6.18, -16.18, -16.18, 6.18}, new float[]{0.00, 19.02, 11.76, -11.76, -19.02}, 5, #87F4F5, #225D67),
+  SMALL(PI/10,2.0,20,new float[]{12.00, -0.00, -12.00, 0.00}, new float[]{0.00, 12.00, -0.00, -12.00}, 4, #557C4C, #2DD38C);
   
   public final float mass;
   public final float turnRate;
@@ -90,7 +92,8 @@ enum Turret implements Collideable, Renderable{
 }
 
 enum Cannon implements Renderable {
-    TEST(50,75,10,6,2.5,PI/100,PI/20,3.5,new float[]{0,30,30,0},new float[]{-2,-2,2,2},4,#CD3F66,#000000);
+    TEST(50,75,10,6,2.5,PI/100,PI/20,3.5,new float[]{0,30,30,0},new float[]{-2,-2,2,2},4,#CD3F66,#000000),
+    SHORT(100,100,30,3,1.5,PI/20,PI/10,4.3,new float[]{0,15,17,17,15,0},new float[]{-2.5,-2.5,-4,4,2.5,2.5}, 6, #5F4C22, #2E2309);
   
     private final int damage;
     private final float penetration;

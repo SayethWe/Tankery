@@ -23,7 +23,6 @@ Player testGunner;
 public static final Set<Entity>entities=new HashSet<Entity>();
 public static final Set<Impactor>impactors=new HashSet<Impactor>();
 public static final Set<Hittable>hittables=new HashSet<Hittable>();
-public static final Set<Entity>enemies=new HashSet<Entity>();
 
 //Things that should be removed from the trackers
 Set<Entity>toRemove=new HashSet<Entity>();
@@ -42,7 +41,7 @@ void setup() {
   //Tank aiTank;
   playerTank = new Tank();
   new Tank(200,300,PI/3,PI/2);
-  new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST);
+  new PatrolAI(500,400,PI/4,PI/6,Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.TEST,testRoute());
   new PatrolAI(650,75,PI,3*PI/5,testRoute());
   new PatrolAI(100,600,PI/2,PI/2,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
   testPlayer = new TestPlayer();

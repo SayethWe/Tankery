@@ -5,7 +5,7 @@ public class PatrolAI extends Tank {
   private final float ANGLE_TURN = PI/4;
   private final float ANGLE_DRIVE = PI/8;
   
-  private final float DIST_SLOW = 30;
+  private final float DIST_SLOW = 50;
   
   private final Route route;
   private Node target;

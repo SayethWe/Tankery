@@ -40,15 +40,15 @@ void setup() {
   noSmooth();
   
   //Tank aiTank;
-  entities.add(playerTank = new Tank());
-  entities.add(new Tank(200,300,PI/3,PI/2));
-  entities.add(new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST));
-  entities.add(new PatrolAI(650,75,PI,3*PI/5,testRoute()));
-  entities.add(new PatrolAI(100,600,PI/2,PI/2,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack()));
-  entities.add(testPlayer = new TestPlayer());
-  entities.add(testCommander = new Commander(playerTank));
-  entities.add(testGunner=new Gunner(playerTank));
-  entities.add(testDriver=new Driver(playerTank));
+  playerTank = new Tank();
+  new Tank(200,300,PI/3,PI/2);
+  new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST);
+  new PatrolAI(650,75,PI,3*PI/5,testRoute());
+  new PatrolAI(100,600,PI/2,PI/2,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
+  testPlayer = new TestPlayer();
+  testCommander = new Commander(playerTank);
+  testGunner=new Gunner(playerTank);
+  testDriver=new Driver(playerTank);
   //entities.add(testPlayer=testCommander);
   logger.log("Startup sucessful");
 }

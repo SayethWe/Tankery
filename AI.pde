@@ -20,19 +20,20 @@ public class PatrolAI extends Tank {
   public PatrolAI(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route) {
     super(x,y,facing,turretFacing,hull,turret,cannon,engine);
     this.route=route;
-    target = route.first();
+    //target = route.first();
+    target=route.near(x,y);
   }
   
   //debug render
-  //public void render() {
-  //  super.render();
-  //  noFill();
-  //  stroke(0);
-  //  ellipseMode(RADIUS);
-  //  ellipse(target.x,target.y,sqrt(target.tolerance),sqrt(target.tolerance));
-  //  rectMode(CORNERS);
-  //  line(x,y,target.x,target.y);
-  //}
+  public void render() {
+    super.render();
+    noFill();
+    stroke(0);
+    ellipseMode(RADIUS);
+    ellipse(target.x,target.y,sqrt(target.tolerance),sqrt(target.tolerance));
+    rectMode(CORNERS);
+    line(x,y,target.x,target.y);
+  }
   
   public void update() {
     super.update();
@@ -77,14 +78,6 @@ public class PatrolAI extends Tank {
     }
   }
   
-  private void moveTo(Entity e) {
-    moveTo(e.getX(), e.getY());
-  }
-  
-  private void turnTo(Entity e) {
-    facing = e.getFacing()%TWO_PI;
-  }
-  
 }
 
 public class Route {
@@ -116,6 +109,7 @@ public class Route {
       }
     } else if (node < 0) {
       back=false;
+      node=0;
     }
     return path.get(node);
   }
@@ -125,6 +119,21 @@ public class Route {
     return path.get(0);
   }
   
+  public Node near(float x, float y) {
+    float nearest=Float.MAX_VALUE;
+    int nearestInd=0;
+    for(int i = 0; i<nodes; i++){
+      Node n = path.get(i);
+      float dist=n.distTo(x,y);
+      if(dist<nearest) {
+        nearestInd=i;
+        nearest=dist;
+      }
+    }
+    node=nearestInd;
+    return path.get(node);
+  }
+  
 }
 
 static Route testRoute() {
@@ -132,10 +141,21 @@ static Route testRoute() {
   path.add(instance.new Node(625,350,5,18));
   path.add(instance.new Node(450,600,5,10));
   path.add(instance.new Node(175,525,5,13));
-  path.add(instance.new Node(375,375,20,5));
+  path.add(instance.new Node(325,375,20,5));
   path.add(instance.new Node(100,100,5,20));
   path.add(instance.new Node(450,150,5,20));
   return instance.new Route(path, true);
+}
+
+static Route testBack() {
+  List<Node> path = new ArrayList<Node>(7);
+  path.add(instance.new Node(625,350,5,18));
+  path.add(instance.new Node(450,150,5,20));
+  path.add(instance.new Node(100,100,5,20));
+  path.add(instance.new Node(325,375,20,5));
+  path.add(instance.new Node(175,525,5,13));
+  path.add(instance.new Node(450,600,5,10));
+  return instance.new Route(path, false);
 }
 
 public class Node {
@@ -150,6 +170,10 @@ public class Node {
     this.y=y;
     this.delay=delay;
     this.tolerance = tolerance*tolerance;
+  }
+  
+  public float distTo(float x, float y) {
+    return findSquareDist(x,y,this.x,this.y);
   }
   
 }

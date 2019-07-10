@@ -44,6 +44,7 @@ void setup() {
   entities.add(new Tank(200,300,PI/3,PI/2));
   entities.add(new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST));
   entities.add(new PatrolAI(650,75,PI,3*PI/5,testRoute()));
+  entities.add(new PatrolAI(100,600,PI/2,PI/2,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack()));
   entities.add(testPlayer = new TestPlayer());
   entities.add(testCommander = new Commander(playerTank));
   entities.add(testGunner=new Gunner(playerTank));
@@ -59,7 +60,7 @@ void draw() {
   updateAll();
   handleCollisions();
   //renderAll();
-  handleFog(); //Must be penultimate call
+  //handleFog(); //Must be penultimate call
   drawUI(); //must be last call
 }
 

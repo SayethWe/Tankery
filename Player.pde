@@ -231,8 +231,8 @@ public class ViewField {
     angle=(angle+TWO_PI)%TWO_PI;
     float viewArc = viewAngle/2;
     //herein lies the problem
-    float seperation = abs(facing-angle)%TWO_PI;
-    return (seperation<=viewArc||seperation>=TWO_PI-viewArc);
+    float seperation = angleBetween(facing,angle);
+    return (abs(seperation)<=viewArc);
   }
   
   public float getViewDistance() {

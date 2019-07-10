@@ -14,6 +14,7 @@ class Tank extends Entity implements Hittable{
   private float turretFacing;
   private int health;
   private int reloadCounter;
+  private boolean isDead=false;
   
   public Tank() {
     this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST);
@@ -55,6 +56,11 @@ class Tank extends Entity implements Hittable{
   }
   public void turnTurretTo(float theta) {
     turretFacing=theta;
+  }
+  
+  public void markToRemove() {
+    super.markToRemove();
+    isDead=true;
   }
   
   public void damage(int damage) {
@@ -130,6 +136,10 @@ class Tank extends Entity implements Hittable{
   
   public void update() {
     reloadStep(false);
+  }
+  
+  public boolean isDead() {
+    return isDead;
   }
   
   public void reloadStep(boolean wasLoader) {

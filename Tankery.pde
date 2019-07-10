@@ -23,6 +23,7 @@ Player testGunner;
 public static final Set<Entity>entities=new HashSet<Entity>();
 public static final Set<Impactor>impactors=new HashSet<Impactor>();
 public static final Set<Hittable>hittables=new HashSet<Hittable>();
+public static final Set<Entity>enemies=new HashSet<Entity>();
 
 //Things that should be removed from the trackers
 Set<Entity>toRemove=new HashSet<Entity>();
@@ -38,10 +39,12 @@ void setup() {
   //surface.setResizable(true);
   noSmooth();
   
+  //Tank aiTank;
   entities.add(playerTank = new Tank());
   entities.add(new Tank(200,300,PI/3,PI/2));
   entities.add(new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST));
-  entities.add(new Tank(650,75,PI,3*PI/5,new Random()));
+  entities.add(new PatrolAI(650,75,PI,3*PI/5,testRoute()));
+  entities.add(new PatrolAI(100,600,PI/2,PI/2,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack()));
   entities.add(testPlayer = new TestPlayer());
   entities.add(testCommander = new Commander(playerTank));
   entities.add(testGunner=new Gunner(playerTank));
@@ -57,7 +60,7 @@ void draw() {
   updateAll();
   handleCollisions();
   //renderAll();
-  handleFog(); //Must be penultimate call
+  //handleFog(); //Must be penultimate call
   drawUI(); //must be last call
 }
 
@@ -88,12 +91,6 @@ public void handleCollisions() {
   }
 }
 
-//public void renderAll() {
-//  for (Entity e:entities){
-//    e.render();
-//  }
-//}
-
 interface Hittable {
   public boolean contains(Shape collider);
   public void damage(int damage);
@@ -114,6 +111,10 @@ public abstract class Entity {
     this.y=y;
     this.facing=facing;
     addToTrackers();
+  }
+  
+  public Entity(Entity beginAt) {
+    this(beginAt.x,beginAt.y,beginAt.facing);
   }
   
   public void markToRemove() {

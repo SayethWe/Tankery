@@ -38,10 +38,12 @@ void setup() {
   //surface.setResizable(true);
   noSmooth();
   
+  Tank aiTank;
   entities.add(playerTank = new Tank());
   entities.add(new Tank(200,300,PI/3,PI/2));
   entities.add(new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST));
-  entities.add(new Tank(650,75,PI,3*PI/5,new Random()));
+  entities.add(aiTank=new Tank(650,75,PI,3*PI/5));
+  entities.add(new AI(aiTank,testRoute()));
   entities.add(testPlayer = new TestPlayer());
   entities.add(testCommander = new Commander(playerTank));
   entities.add(testGunner=new Gunner(playerTank));
@@ -57,7 +59,7 @@ void draw() {
   updateAll();
   handleCollisions();
   //renderAll();
-  handleFog(); //Must be penultimate call
+  //handleFog(); //Must be penultimate call
   drawUI(); //must be last call
 }
 
@@ -114,6 +116,10 @@ public abstract class Entity {
     this.y=y;
     this.facing=facing;
     addToTrackers();
+  }
+  
+  public Entity(Entity beginAt) {
+    this(beginAt.x,beginAt.y,beginAt.facing);
   }
   
   public void markToRemove() {

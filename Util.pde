@@ -14,10 +14,6 @@ static void createProjectile(float x, float y, float direction, float penetratio
   entities.add(instance.new Projectile(x,y,direction,penetration, shellVelocity,damage,caliber));
 }
 
-static float lessMassive(float a, float b) {
-  return (abs(a)>abs(b))?b:a;
-}
-
 static float angleBetween(float a, float b) {
   float diff = ( a - b + PI ) % TWO_PI - PI;
   return diff < -PI ? diff + TWO_PI : diff;

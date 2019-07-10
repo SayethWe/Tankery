@@ -1,66 +1,74 @@
 import java.util.List;
 
-public class AI extends Entity {
+public class PatrolAI extends Tank {
   private final float ANGLE_EPSILON = PI/100;
   private final float ANGLE_TURN = PI/4;
   private final float ANGLE_DRIVE = PI/8;
   
   private final float DIST_SLOW = 30;
   
-  private final Tank vehicle;
   private final Route route;
   private Node target;
   private int delay=0;
   
-  public AI(Tank vehicle, Route route) {
-    super(vehicle);
-    this.vehicle=vehicle;
+  public PatrolAI(float x, float y, float facing, float turretFacing, Route route) {
+    super(x,y,facing,turretFacing);
     this.route=route;
     target = route.first();
   }
   
-  public void render() {
-    noFill();
-    stroke(0);
-    ellipseMode(RADIUS);
-    ellipse(target.x,target.y,sqrt(target.tolerance),sqrt(target.tolerance));
-    rectMode(CORNERS);
-    line(x,y,target.x,target.y);
+  public PatrolAI(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route) {
+    super(x,y,facing,turretFacing,hull,turret,cannon,engine);
+    this.route=route;
+    target = route.first();
   }
   
+  //debug render
+  //public void render() {
+  //  super.render();
+  //  noFill();
+  //  stroke(0);
+  //  ellipseMode(RADIUS);
+  //  ellipse(target.x,target.y,sqrt(target.tolerance),sqrt(target.tolerance));
+  //  rectMode(CORNERS);
+  //  line(x,y,target.x,target.y);
+  //}
+  
   public void update() {
-    if(vehicle.isDead()) markToRemove();
-    this.moveTo(vehicle);
-    this.turnTo(vehicle);
+    super.update();
+    //this.moveTo(vehicle);
+    //this.turnTo(vehicle);
     
     if(delay<=0) {
       float dist = findSquareDist(x,y,target.x,target.y)-target.tolerance;
-      println("distance: " + dist);
+      //println("distance: " + dist);
       if(dist<=0) {
         delay=target.delay;
+        logger.log(this+" reached target node at:"+x+","+y+", proceeding to next node");
         target=route.next();
         return;
       } else {
-        float targetAngle=atan2(target.y-y,target.x-x);
-        stroke(255,0,0);
-        rectMode(CORNER);
-        line(x,y,x+20*cos(targetAngle),y+20*sin(targetAngle));
-        float angleDel = lessMassive((facing-targetAngle),(targetAngle-facing));
-        println("Angle difference: "+angleDel+"="+facing+" - "+targetAngle);
+        float targetAngle=(atan2(target.y-y,target.x-x)+TWO_PI)%TWO_PI;
+        //stroke(255,0,0);
+        //line(x,y,x+20*cos(targetAngle),y+20*sin(targetAngle));
+        
+        //float angleDel = lessMassive((facing-targetAngle),(targetAngle-facing));
+        float angleDel=angleBetween(facing,targetAngle);
+        //println("Angle difference: "+angleDel+"="+facing+" - "+targetAngle);
         if (angleDel < -ANGLE_TURN) {
-          vehicle.turn(-1);
+          turn(1);
         } else if (angleDel>ANGLE_TURN) {
-          vehicle.turn(1);
+          turn(-1);
         } else if(angleDel<-ANGLE_EPSILON) {
-          vehicle.turn(-0.5);
+          turn(0.5);
         } else if (angleDel>ANGLE_EPSILON) {
-          vehicle.turn(0.5);
+          turn(-0.5);
         }
         if (abs(angleDel) < ANGLE_DRIVE) {
           if(dist>DIST_SLOW) {
-            vehicle.drive(1);
+            drive(1);
           } else {
-            vehicle.drive(0.5);
+            drive(0.5);
           }
         }
       }
@@ -120,12 +128,13 @@ public class Route {
 }
 
 static Route testRoute() {
-  List<Node> path = new ArrayList<Node>(5);
-  path.add(instance.new Node(475,350,5,18));
-  path.add(instance.new Node(400,450,5,10));
-  path.add(instance.new Node(300,425,5,13));
-  path.add(instance.new Node(300,325,5,20));
-  path.add(instance.new Node(400,275,5,20));
+  List<Node> path = new ArrayList<Node>(7);
+  path.add(instance.new Node(625,350,5,18));
+  path.add(instance.new Node(450,600,5,10));
+  path.add(instance.new Node(175,525,5,13));
+  path.add(instance.new Node(375,375,20,5));
+  path.add(instance.new Node(100,100,5,20));
+  path.add(instance.new Node(450,150,5,20));
   return instance.new Route(path, true);
 }
 

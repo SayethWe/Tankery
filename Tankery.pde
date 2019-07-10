@@ -10,17 +10,21 @@ import java.util.HashSet;
 
 static Tankery instance;
 
+//the active player and vehicle, in most cases.
 Player testPlayer;
 Tank playerTank;
 
+//testing roles that can be swapped between
 Player testCommander;
 Player testDriver;
 Player testGunner;
 
+//trackers, for drawing and collision purposes
 public static final Set<Entity>entities=new HashSet<Entity>();
 public static final Set<Impactor>impactors=new HashSet<Impactor>();
 public static final Set<Hittable>hittables=new HashSet<Hittable>();
 
+//Things that should be removed from the trackers
 Set<Entity>toRemove=new HashSet<Entity>();
 
 Logger logger;
@@ -34,10 +38,10 @@ void setup() {
   //surface.setResizable(true);
   noSmooth();
   
-  
   entities.add(playerTank = new Tank());
   entities.add(new Tank(200,300,PI/3,PI/2));
   entities.add(new Tank(500,400,PI/4,PI/6,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.TEST));
+  entities.add(new Tank(650,75,PI,3*PI/5,new Random()));
   entities.add(testPlayer = new TestPlayer());
   entities.add(testCommander = new Commander(playerTank));
   entities.add(testGunner=new Gunner(playerTank));

@@ -15,7 +15,7 @@ void keyPressed() {
       testPlayer=testGunner;
       break;
       case '2':
-      testPlayer = testCommander;
+      testPlayer=testCommander;
       break;
       case '3':
       testPlayer=testDriver;

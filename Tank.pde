@@ -1,4 +1,5 @@
 import java.awt.geom.Area;
+import java.util.Random;
 
 class Tank extends Entity implements Hittable{
   private final Hull hull;
@@ -20,6 +21,14 @@ class Tank extends Entity implements Hittable{
   
   public Tank(float x, float y, float facing, float turretFacing) {
     this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST);
+  }
+  
+  public Tank(float x, float y, float facing, float turretFacing, Random random) {
+    this(x,y,facing,turretFacing,
+    Hull.values()[random.nextInt(Hull.values().length)],
+    Turret.values()[random.nextInt(Turret.values().length)],
+    Cannon.values()[random.nextInt(Turret.values().length)],
+    Engine.values()[random.nextInt(Turret.values().length)]);
   }
   
   public Tank(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine) {

@@ -59,7 +59,7 @@ void draw() {
   updateAll();
   handleCollisions();
   //renderAll();
-  //handleFog(); //Must be penultimate call
+  handleFog(); //Must be penultimate call
   drawUI(); //must be last call
 }
 

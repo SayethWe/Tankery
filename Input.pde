@@ -26,6 +26,9 @@ void keyPressed() {
       case ']':
       playerTank.damage(-5);
       break;
+      case '\\':
+      screenshot();
+      break;
       case '=':
       stop();
       exit();

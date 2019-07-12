@@ -28,6 +28,13 @@ String formattedDate(char sep) {
   return result.toString();
 }
 
+void screenshot() {
+  noLoop();
+  save("screenshots/screenshot_"+formattedDate('-')+formattedTime('-')+".png");
+  logger.log("Screenshot saved");
+  loop();
+}
+
 String formattedTime(char sep) {
   StringBuilder result = new StringBuilder();
   result.append(nf(hour(),2)).append(sep);

@@ -125,9 +125,9 @@ enum Cannon implements Renderable {
       return render;
     }
     
-    public void fire(float x, float y, float facing) {
+    public void fire(float x, float y, float facing, int team) {
         float direction=clampedGaussian(facing,dispersion,facing-maxDispersion,facing+maxDispersion);
-        createProjectile(x,y,direction,penetration,shellVelocity,damage,caliber);
+        createProjectile(x,y,direction,penetration,shellVelocity,damage,caliber,team);
     }
 }
 

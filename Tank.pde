@@ -11,29 +11,38 @@ class Tank extends Entity implements Hittable{
   private final float speed;
   private final float traverse;
   
-  private float turretFacing;
+  protected float turretFacing;
   private int health;
   private int reloadCounter;
   private boolean isDead=false;
   
-  public Tank() {
-    this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST);
+  //public Tank() {
+  //  this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,0);
+  //}
+  
+  public Tank(int team) {
+    this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,team);
   }
   
-  public Tank(float x, float y, float facing, float turretFacing) {
-    this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST);
+  //public Tank(float x, float y, float facing, float turretFacing) {
+  //  this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,0);
+  //}
+  
+  public Tank(float x, float y, float facing, float turretFacing, int team) {
+    this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,team);
   }
   
-  public Tank(float x, float y, float facing, float turretFacing, Random random) {
-    this(x,y,facing,turretFacing,
-    Hull.values()[random.nextInt(Hull.values().length)],
-    Turret.values()[random.nextInt(Turret.values().length)],
-    Cannon.values()[random.nextInt(Turret.values().length)],
-    Engine.values()[random.nextInt(Turret.values().length)]);
-  }
+  //public Tank(float x, float y, float facing, float turretFacing, Random random) {
+  //  this(x,y,facing,turretFacing,
+  //  Hull.values()[random.nextInt(Hull.values().length)],
+  //  Turret.values()[random.nextInt(Turret.values().length)],
+  //  Cannon.values()[random.nextInt(Turret.values().length)],
+  //  Engine.values()[random.nextInt(Turret.values().length)]
+  //  ,0);
+  //}
   
-  public Tank(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine) {
-    super(x,y,facing);
+  public Tank(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine, int team) {
+    super(x,y,facing,team);
     this.hull=hull;
     this.turret=turret;
     this.turretFacing=turretFacing;
@@ -123,7 +132,7 @@ class Tank extends Entity implements Hittable{
   
   public void fire() {
     if(reloadCounter==0) {
-      cannon.fire(x,y,turretFacing);
+      cannon.fire(x,y,turretFacing,team);
       reloadCounter=cannon.reload;
     }
   }

@@ -10,8 +10,8 @@ public static float clampedGaussian(float mean, float variance, float min, float
   return constrain(calcDamage, min, max);
 }
 
-static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber) {
-  entities.add(instance.new Projectile(x,y,direction,penetration, shellVelocity,damage,caliber));
+static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber, int team) {
+  entities.add(instance.new Projectile(x,y,direction,penetration, shellVelocity,damage,caliber,team));
 }
 
 static float angleBetween(float a, float b) {
@@ -82,4 +82,32 @@ class Logger {
     logFile.println();
   }
   
+}
+
+class Hasher {
+  int result;
+  
+  final int prime;
+  
+  public Hasher(int prime) {
+    this(prime,0);
+  }
+  
+  public Hasher(int prime, int hash) {
+    this.prime=prime;
+    this.result=hash;
+  }
+  
+  public int getResult() {
+    return result;
+  }
+  
+  public void append(Object o) {
+    append(o.hashCode());
+  }
+  
+  public void append(int i) {
+    result*=prime;
+    result+=i;
+  }
 }

@@ -13,8 +13,8 @@ class Projectile extends Entity implements Impactor{
   byte age = 0;
   private boolean armed=false;
   
-  public Projectile(float x, float y, float angle, float penetration,float velocity,float damage,float caliber) {
-    super(x,y,angle);
+  public Projectile(float x, float y, float angle, float penetration, float velocity,float damage,float caliber,int team) {
+    super(x,y,angle,team);
     this.penetration=penetration;
     this.velocity=velocity;
     this.meanDamage=damage;

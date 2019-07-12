@@ -16,7 +16,7 @@ abstract class Player extends Entity {
   //private float y;
 
   public Player(Tank vehicle, ViewField... viewFields) {
-    super(vehicle.getX(), vehicle.getY(), vehicle.getFacing());
+    super(vehicle.getX(), vehicle.getY(), vehicle.getFacing(), vehicle.team);
     this.viewFields=viewFields;
     this.viewFieldMax=viewFields.length-1;
     this.vehicle=vehicle;

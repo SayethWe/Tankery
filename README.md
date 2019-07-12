@@ -10,13 +10,14 @@ at enemy tanks.
 
 There are three roles actually planned and somewhat implemented.
 
-###The Commander:
-![commander default view] (https://github.com/geekman9097/Tankery/blob/master/screenshots/CommanderNear.png)
+### The Commander:
+
+![commander default view](https://github.com/geekman9097/Tankery/blob/master/screenshots/CommanderNear.png)
 Has no direct impact on the tank itself, but has the widest view, and can most quickly look around.
 in a 3d-version, would also be responsible for helping to identify and range-find.
 Can direct the gunner to targets, and in 3-d, has a sight on the top of the turret that when overlaps with his target, tells the commander the gunner is roughly on line.
 
-Can also drop alert pings on the map for his crewmates to use.
+Can also drop alert pings on the map for crewmates to use.
 
 Currently has three optics, the default of which was shown above.
 

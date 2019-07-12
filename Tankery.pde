@@ -39,11 +39,11 @@ void setup() {
   noSmooth();
   
   //Tank aiTank;
-  playerTank = new Tank();
-  new Tank(200,300,PI/3,PI/2);
-  new PatrolAI(500,400,PI/4,PI/6,Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.TEST,testRoute());
-  new PatrolAI(650,75,PI,3*PI/5,testRoute());
-  new PatrolAI(100,600,PI/2,PI/2,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
+  playerTank = new Tank(1);
+  new Tank(200,300,PI/3,PI/2,0);
+  new PatrolAI(500,400,PI/4,PI/6,0,Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.TEST,testRoute());
+  new PatrolAI(650,75,PI,3*PI/5,0,testRoute());
+  new PatrolAI(100,600,PI/2,PI/2,0,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
   testPlayer = new TestPlayer();
   testCommander = new Commander(playerTank);
   testGunner=new Gunner(playerTank);
@@ -83,7 +83,7 @@ public void updateAll() {
 public void handleCollisions() {
   for(Impactor i :impactors) {
     for(Hittable h: hittables) {
-      if(h.contains(i.getCollider())) {
+      if(h.contains(i.getCollider())&&i.getTeam()!=h.getTeam()) {
         h.damage(i.impact(h.getThickness(i.getFacing())));
       }
     }
@@ -94,26 +94,35 @@ interface Hittable {
   public boolean contains(Shape collider);
   public void damage(int damage);
   public float getThickness(float incident);
+  public byte getTeam();
 }
 
 interface Impactor {
   public int impact(float thickness);
   public float getFacing();
   public Shape getCollider();
+  public byte getTeam();
 }
 
 public abstract class Entity {
   protected float x,y,facing;
+  protected final byte team;
+  protected final long init;
   
-  public Entity(float x,float y,float facing) {
+  protected int hash; //coching teh Hashcode after it's called;
+  
+  public Entity(float x,float y,float facing, int team) {
+    if(team>Byte.MAX_VALUE) throw new IllegalArgumentException();
     this.x=x;
     this.y=y;
     this.facing=facing;
+    this.team=(byte)team;
+    this.init=millis();
     addToTrackers();
   }
   
-  public Entity(Entity beginAt) {
-    this(beginAt.x,beginAt.y,beginAt.facing);
+  public Entity(Entity beginAt, int team) {
+    this(beginAt.x,beginAt.y,beginAt.facing, team);
   }
   
   public void markToRemove() {
@@ -141,9 +150,24 @@ public abstract class Entity {
     facing=(theta+TWO_PI)%TWO_PI;
   }
   
+  public byte getTeam() {
+    return team;
+  }
+  
   protected void addToTrackers() {
     entities.add(this);
   }
   public abstract void render();
   public abstract void update();
+  
+  public int hashCode() {
+    if(hash!=0) {
+      return hash;
+    } else {
+      Hasher hashCalc = new Hasher(17);
+      hashCalc.append(team);
+      hashCalc.append(init);
+      return hashCalc.result;
+    }
+  }
 }

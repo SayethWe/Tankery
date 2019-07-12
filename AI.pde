@@ -8,18 +8,24 @@ public class PatrolAI extends Tank {
   private final float DIST_SLOW = 50*50;
   
   private final Route route;
+  private final float viewDist, spotPercent;
+  
   private Node target;
   private int delay=0;
   
-  public PatrolAI(float x, float y, float facing, float turretFacing, int team, Route route) {
+  public PatrolAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Route route) {
     super(x,y,facing,turretFacing,team);
     this.route=route;
+    this.viewDist=viewDist*viewDist;
+    this.spotPercent=spotPercent;
     target = route.first();
   }
   
-  public PatrolAI(float x, float y, float facing, float turretFacing, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route) {
+  public PatrolAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route) {
     super(x,y,facing,turretFacing,hull,turret,cannon,engine,team);
     this.route=route;
+    this.viewDist=viewDist*viewDist;
+    this.spotPercent=spotPercent;
     //target = route.first();
     target=route.near(x,y);
   }

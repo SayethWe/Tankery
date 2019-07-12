@@ -19,29 +19,29 @@ class Tank extends Entity implements Hittable, Impactor {
   private int reloadCounter;
   private boolean isDead=false;
   
-  //public Tank() {
-  //  this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,0);
-  //}
-  
   public Tank(int team) {
     this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,team);
   }
   
-  //public Tank(float x, float y, float facing, float turretFacing) {
-  //  this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,0);
-  //}
+  public Tank(Prebuild build, int team) {
+    this(width/2,height/2,0,0,build,team);
+  }
   
   public Tank(float x, float y, float facing, float turretFacing, int team) {
     this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,team);
   }
   
-  //public Tank(float x, float y, float facing, float turretFacing, Random random) {
+  public Tank(float x, float y, float facing, float turretFacing, Prebuild build, int team) {
+    this(x,y,facing,turretFacing,build.hull,build.turret,build.cannon,build.engine,team);
+  }
+  
+  //public Tank(float x, float y, float facing, float turretFacing, Random random, int team) {
   //  this(x,y,facing,turretFacing,
   //  Hull.values()[random.nextInt(Hull.values().length)],
   //  Turret.values()[random.nextInt(Turret.values().length)],
   //  Cannon.values()[random.nextInt(Turret.values().length)],
   //  Engine.values()[random.nextInt(Turret.values().length)]
-  //  ,0);
+  //  ,team);
   //}
   
   public Tank(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine, int team) {

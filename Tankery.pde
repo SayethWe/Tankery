@@ -41,7 +41,7 @@ void setup() {
   //Tank aiTank;
   playerTank = new Tank(1);
   new Tank(200,300,PI/3,PI/2,0);
-  new PatrolAI(500,400,PI/4,PI/6,0,Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.TEST,testRoute());
+  new PatrolAI(500,400,PI/4,PI/6,0,Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.FAST,testRoute());
   new PatrolAI(650,75,PI,3*PI/5,0,testRoute());
   new PatrolAI(100,600,PI/2,PI/2,0,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
   testPlayer = new TestPlayer();

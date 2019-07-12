@@ -1,19 +1,20 @@
 import java.awt.geom.Area;
 import java.util.Random;
 
-class Tank extends Entity implements Hittable, Impactor{
+class Tank extends Entity implements Hittable, Impactor {
   private final Hull hull;
   private final Turret turret;
   private final Cannon cannon;
   private final Engine engine;
   private final float mass;
   public final int maxHealth;
-  private final float speed;
   private final float traverse;
+  private final float acceleration;
   
   private int hash;
   
   protected float turretFacing;
+  private float velocity;
   private int health;
   private int reloadCounter;
   private boolean isDead=false;
@@ -53,12 +54,13 @@ class Tank extends Entity implements Hittable, Impactor{
     this.mass = hull.mass+turret.mass+cannon.mass+engine.mass;
     this.maxHealth=hull.maxHealth+turret.maxHealth;
     this.health=this.maxHealth;
-    this.speed=engine.power/(mass+hull.groundResistance);
+    this.acceleration=engine.power/(mass+hull.groundResistance);
     this.traverse=PI*engine.traversePower/(mass+hull.groundResistance);
   }
   
   protected void addToTrackers() {
     hittables.add(this);
+    impactors.add(this);
     super.addToTrackers();
   }
   
@@ -82,9 +84,6 @@ class Tank extends Entity implements Hittable, Impactor{
   }
   
   public void render() {
-    //render(hull,facing);
-    //render(turret,turretFacing);
-    //render(cannon,turretFacing);
     pushMatrix();
     translate(x,y);
     rotate(facing);
@@ -106,7 +105,7 @@ class Tank extends Entity implements Hittable, Impactor{
   }
   public float getThickness(float angle) {
     float incidence=(facing-angle)%TWO_PI;
-    return hull.armor/sin(incidence);
+    return abs(hull.armor/sin(incidence));
   }
   
   public int getHealth() {
@@ -125,9 +124,8 @@ class Tank extends Entity implements Hittable, Impactor{
   }
   
   public void drive(float dir) {
-    float newX = x+dir*speed*cos(facing);
-    float newY = y+dir*speed*sin(facing);
-    moveTo(newX,newY);
+    velocity+=acceleration*dir;
+    velocity=constrain(velocity,engine.maxReverseSpeed,engine.maxSpeed);
   }
   
   public void turn(float dir) {
@@ -140,8 +138,23 @@ class Tank extends Entity implements Hittable, Impactor{
     turnTurretBy(turret.turnRate*dir);
   }
   
+  public void brake() {
+    int sign = sign(velocity);
+    velocity-=engine.brakePower*sign/mass;
+    if(velocity*sign<0) {
+      velocity=0;
+    }
+  }
+  
   public void update() {
     reloadStep(false);
+    doMovement();
+  }
+  
+  private void doMovement() {
+    float newX = x+velocity*cos(facing);
+    float newY = y+velocity*sin(facing);
+    moveTo(newX,newY);
   }
   
   public boolean isDead() {
@@ -168,12 +181,14 @@ class Tank extends Entity implements Hittable, Impactor{
     }
     
   public int impact(Hittable h) {
-    println("tank collision");
+    //println("tank collision");
     float thickness=h.getThickness(facing);
-    int damage = int(getThickness(facing)/thickness*speed);
-    //todo: bounce back
+    //println(thickness);
+    int damage = int((hull.armor*2/thickness)*abs(velocity));
+    //println(damage);
+    //TODO: bounce back
+    velocity=0;
     h.damage(damage);
-    this.damage(damage);
     return damage;
   }
     
@@ -186,7 +201,6 @@ class Tank extends Entity implements Hittable, Impactor{
       hashCalc.append(engine);
       hashCalc.append(mass);
       hashCalc.append(maxHealth);
-      hashCalc.append(speed);
       hashCalc.append(traverse);
       hash=hashCalc.getResult();
     }

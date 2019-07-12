@@ -98,6 +98,8 @@ public class TestPlayer extends Player {
       break;
       
       case UNKNOWN:
+      //baaaad implementation
+      vehicle.brake();
       break;
       
       default:
@@ -196,6 +198,7 @@ public class Driver extends Player {
       break;
       
       case ACTION:
+      vehicle.brake();
       case UNKNOWN:
       break;
       

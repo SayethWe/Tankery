@@ -43,6 +43,11 @@ String formattedTime(char sep) {
   return result.toString();
 }
 
+int sign(float f) {
+  if (f==0) return 0;
+  return (f<0)?-1:1;
+}
+
 enum LogLevel {
   
   ERROR("[ERROR] "),

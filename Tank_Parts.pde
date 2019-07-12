@@ -132,15 +132,20 @@ enum Cannon implements Renderable {
 }
 
 enum Engine {
-  TEST(150,1.0,5.0),
-  WEAK(75,0.7,3.0);
+  TEST(1.5,1.25,2,-1,1.0,5.0),
+  FAST(1,1.5,4,-1.5,1.0,4.5),
+  WEAK(.75,1,2.5,-1,0.7,3.0);
   
-  public final int power;
+  public final float power, brakePower;
+  public final float maxSpeed, maxReverseSpeed; //The speed governer
   public final float traversePower;
   public final float mass;
   
-  private Engine(int power, float traversePower, float mass) {
+  private Engine(float power, float brakePower, float maxSpeed, float maxReverse, float traversePower, float mass) {
     this.power=power;
+    this.brakePower=brakePower;
+    this.maxSpeed=maxSpeed;
+    this.maxReverseSpeed = maxReverse;
     this.traversePower=traversePower;
     this.mass=mass;
   }

@@ -83,24 +83,24 @@ public void updateAll() {
 public void handleCollisions() {
   for(Impactor i :impactors) {
     for(Hittable h: hittables) {
-      if(i.getTeam()!=h.getTeam()&&h.contains(i.getCollider())) {
-        i.impact(h);
+      if(h.contains(i.getCollider())&&i.getTeam()!=h.getTeam()) {
+        h.damage(i.impact(h.getThickness(i.getFacing())));
       }
     }
   }
 }
 
 interface Hittable {
-  public boolean contains(Area collider);
+  public boolean contains(Shape collider);
   public void damage(int damage);
   public float getThickness(float incident);
   public byte getTeam();
 }
 
 interface Impactor {
-  public int impact(Hittable h);
+  public int impact(float thickness);
   public float getFacing();
-  public Area getCollider();
+  public Shape getCollider();
   public byte getTeam();
 }
 

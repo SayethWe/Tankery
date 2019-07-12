@@ -1,7 +1,7 @@
 import java.awt.geom.Area;
 import java.util.Random;
 
-class Tank extends Entity implements Hittable, Impactor{
+class Tank extends Entity implements Hittable{
   private final Hull hull;
   private final Turret turret;
   private final Cannon cannon;
@@ -97,16 +97,31 @@ class Tank extends Entity implements Hittable, Impactor{
     popMatrix();
   }
   
-  public boolean contains(Area collider) {
+  public boolean contains(Shape collider) {
     //TODO: Use java.awt.shape for collision detection
     //return(dist(this.x,this.y,x,y)<20);
-    Area col = getCollider();
-    col.intersect(collider);
-    return col.isEmpty();
+    return(collide(hull,facing,collider)||collide(turret,turretFacing,collider));
   }
   public float getThickness(float angle) {
     float incidence=(facing-angle)%TWO_PI;
     return hull.armor/sin(incidence);
+  }
+  
+  //public void render(Renderable r, float facing) {
+  //  pushMatrix();
+  //  translate(x,y);
+  //  rotate(facing);
+  //  shape(r.getRender());
+  //  popMatrix();
+  //}
+  
+  public boolean collide(Collideable c, float facing, Shape other) {
+    AffineTransform at = new AffineTransform();
+    at.translate(x,y);
+    at.rotate(facing);
+    Area collider = new Area(at.createTransformedShape(c.getCollider()));
+    collider.intersect(new Area(other));
+    return !collider.isEmpty();
   }
   
   public int getHealth() {
@@ -155,27 +170,6 @@ class Tank extends Entity implements Hittable, Impactor{
         reloadCounter--;
       }
     }
-    
-    public Area getCollider() {
-      AffineTransform at = new AffineTransform();
-      at.translate(x,y);
-      at.rotate(facing);
-      Area collider = new Area(at.createTransformedShape(hull.collision));
-      at.translate(hull.turretOffset,0);
-      at.rotate(turretFacing-facing);
-      collider.add(new Area(at.createTransformedShape(turret.collision)));
-      return collider;
-    }
-    
-  public int impact(Hittable h) {
-    println("tank collision");
-    float thickness=h.getThickness(facing);
-    int damage = int(getThickness(facing)/thickness*speed);
-    //todo: bounce back
-    h.damage(damage);
-    this.damage(damage);
-    return damage;
-  }
     
   public int hashCode() {
     if(hash==0) {

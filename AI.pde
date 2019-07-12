@@ -44,6 +44,7 @@ public class PatrolAI extends Tank {
       float dist = findSquareDist(x,y,target.x,target.y)-target.tolerance;
       //println("distance: " + dist);
       if(dist<=0) {
+        brake();
         delay=target.delay;
         logger.log(this+" reached target node at:"+x+","+y+", proceeding to next node");
         target=route.next();
@@ -66,14 +67,11 @@ public class PatrolAI extends Tank {
           turn(-0.5);
         }
         if (abs(angleDel) < ANGLE_DRIVE) {
-          if(dist>DIST_SLOW) {
-            drive(1);
-          } else {
-            drive(0.5);
-          }
+          drive(1);
         }
       }
     } else {
+      brake();
       delay--;
     }
   }

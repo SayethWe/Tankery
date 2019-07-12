@@ -71,9 +71,19 @@ class Tank extends Entity implements Hittable{
   }
   
   public void render() {
-    render(hull,facing);
-    render(turret,turretFacing);
-    render(cannon,turretFacing);
+    //render(hull,facing);
+    //render(turret,turretFacing);
+    //render(cannon,turretFacing);
+    pushMatrix();
+    translate(x,y);
+    rotate(facing);
+    shape(hull.render);
+    translate(hull.turretOffset,0);
+    rotate(turretFacing-facing);
+    shape(turret.render);
+    translate(turret.cannonOffset,0);
+    shape(cannon.render);
+    popMatrix();
   }
   
   public boolean contains(Shape collider) {

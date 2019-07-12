@@ -32,23 +32,25 @@ static class PartBuilder {
 
 enum Hull implements Collideable, Renderable{
   
-  TEST(70,20.0,70,2.5,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54),
-  LIGHT(30,10.0,25,1.0,new float[]{25,15,-15,-20,-15,15},new float[]{0,10,10,0,-10,-10},6,#F50F0F,#F5AC0F);
+  TEST(70,20.0,70,2.5,0,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54),
+  LIGHT(30,10.0,25,1.0,-5,new float[]{25,15,-15,-20,-15,15},new float[]{0,10,10,0,-10,-10},6,#F50F0F,#F5AC0F);
   
   public final float mass;
   public final int maxHealth;
   public final float armor;
   public final float groundResistance;
+  public final float turretOffset;
   
   //TODO: collision polygon
   private final Shape collision;
   protected final PShape render;
   
-  private Hull(int maxHealth, float mass, float armor, float groundResistance, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
+  private Hull(int maxHealth, float mass, float armor, float groundResistance, float turretPivot, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
     this.maxHealth=maxHealth;
     this.mass=mass;
     this.armor=armor;
     this.groundResistance=groundResistance;
+    this.turretOffset=turretPivot;
     this.collision = PartBuilder.createCollision(xPoints,yPoints,points);
     this.render = PartBuilder.createRender(xPoints,yPoints,points,fill,stroke);
   }
@@ -63,21 +65,23 @@ enum Hull implements Collideable, Renderable{
  
 enum Turret implements Collideable, Renderable{
   
-  TEST(PI/20,5.0,30,new float[]{20,-10,-10},new float[]{0,17.3,-17.3},3,#6E52FF,#6E52FF),
-  PENT(PI/25,6.0,45,new float[]{20.00, 6.18, -16.18, -16.18, 6.18}, new float[]{0.00, 19.02, 11.76, -11.76, -19.02}, 5, #87F4F5, #225D67),
-  SMALL(PI/10,2.0,20,new float[]{12.00, -0.00, -12.00, 0.00}, new float[]{0.00, 12.00, -0.00, -12.00}, 4, #557C4C, #2DD38C);
+  TEST(PI/20,5.0,30,10,new float[]{20,-10,-10},new float[]{0,17.3,-17.3},3,#6E52FF,#6E52FF),
+  PENT(PI/25,6.0,45,15,new float[]{20.00, 6.18, -16.18, -16.18, 6.18}, new float[]{0.00, 19.02, 11.76, -11.76, -19.02}, 5, #87F4F5, #225D67),
+  SMALL(PI/10,2.0,20,6.5,new float[]{12.00, -0.00, -12.00, 0.00}, new float[]{0.00, 12.00, -0.00, -12.00}, 4, #557C4C, #2DD38C);
   
   public final float mass;
   public final float turnRate;
   public final int maxHealth;
+  public final float cannonOffset;
   
   private final Shape collision;
   protected final PShape render;
   
-  private Turret(float turnRate, float mass, int maxHealth, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
+  private Turret(float turnRate, float mass, int maxHealth, float cannonMount, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
     this.turnRate=turnRate;
     this.mass=mass;
     this.maxHealth=maxHealth;
+    this.cannonOffset=cannonMount;
     
     this.render=PartBuilder.createRender(xPoints,yPoints,points,fill,stroke);
     this.collision=PartBuilder.createCollision(xPoints,yPoints,points);

@@ -53,6 +53,7 @@ abstract class Player extends Entity {
   }
 
   public void update() {
+    if(vehicle.isDead()) this.markToRemove();
     moveTo(vehicle);
     viewCoolDown--;
   }

@@ -2,7 +2,11 @@
 
 A co-operative Tanking game demo/proof-of-concept
 
-Drive around ![a field](https://github.com/geekman9097/Tankery/blob/master/screenshots/Overview.png) and fire ![Firing](https://github.com/geekman9097/Tankery/blob/master/screenshots/Firing.png) at enemy tanks.
+Drive around  
+![the field](https://github.com/geekman9097/Tankery/blob/master/screenshots/Overview.png)  
+and fire  
+![Firing](https://github.com/geekman9097/Tankery/blob/master/screenshots/Firing.png)  
+at enemy tanks.
 
 There are three roles actually planned and somewhat implemented.
 

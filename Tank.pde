@@ -102,7 +102,7 @@ class Tank extends Entity implements Hittable, Impactor{
     //return(dist(this.x,this.y,x,y)<20);
     Area col = getCollider();
     col.intersect(collider);
-    return col.isEmpty();
+    return !col.isEmpty();
   }
   public float getThickness(float angle) {
     float incidence=(facing-angle)%TWO_PI;

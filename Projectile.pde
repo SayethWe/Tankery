@@ -9,6 +9,7 @@ class Projectile extends Entity implements Impactor{
   float penetration;
   float velocity;
   final float meanDamage;
+  final int damage;
   final float caliber;
   byte age = 0;
   private boolean armed=false;
@@ -18,6 +19,7 @@ class Projectile extends Entity implements Impactor{
     this.penetration=penetration;
     this.velocity=velocity;
     this.meanDamage=damage;
+    this.damage=genDamage(damage);
     this.caliber=caliber;
   }
   
@@ -43,17 +45,21 @@ class Projectile extends Entity implements Impactor{
     ellipse(x,y,caliber,caliber);
   }
   
-  public int impact(float thickness) {
+  public int impact(Hittable h) {
+    float thickness = h.getThickness(facing);
     if(thickness<penetration&&armed) {
+      h.damage(damage);
       markToRemove();
-      return getDamage();
+      return damage;
     } else {
+      //Todo: Bouncing
+      markToRemove();
       return 0;
     }
   }
   
-  public Shape getCollider() {
-    return new Ellipse2D.Float(x,y,caliber,caliber);
+  public Area getCollider() {
+    return new Area(new Ellipse2D.Float(x,y,caliber,caliber));
   }
   
   private void arm() {
@@ -62,7 +68,7 @@ class Projectile extends Entity implements Impactor{
     logger.log(this+ "armed at "+x+","+y+" with heading "+facing+"rad");
   }
   
-  public int getDamage() {
+  public int genDamage(float meanDamage) {
     float variance = DAMAGE_VARIANCE*meanDamage;
     float maxVariance = MAX_DAMAGE_VARIANCE*meanDamage;
     return int(clampedGaussian(meanDamage, variance, meanDamage-maxVariance, meanDamage+maxVariance));

@@ -9,6 +9,14 @@ class TankeryServer extends Server {
     super(instance,DEFAULT_PORT);
   }
   
+  private void fullUpdate() {
+    
+  }
+  
+  private void deltaUpdate() {
+    
+  }
+  
 }
 
 class TankeryClient extends Client {
@@ -18,5 +26,9 @@ class TankeryClient extends Client {
   
   public TankeryClient() {
    this("localhost"); 
+  }
+  
+  private void checkUpdate() {
+    
   }
 }

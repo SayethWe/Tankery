@@ -9,6 +9,7 @@ public class PatrolAI extends Tank {
   
   private final Route route;
   private final float viewDist, spotPercent;
+  private final Set<Tank> spotted;
   
   private Node target;
   private int delay=0;
@@ -18,6 +19,7 @@ public class PatrolAI extends Tank {
     this.route=route;
     this.viewDist=viewDist*viewDist;
     this.spotPercent=spotPercent;
+    spotted=new HashSet<Tank>();
     target = route.first();
   }
   
@@ -26,6 +28,7 @@ public class PatrolAI extends Tank {
     this.route=route;
     this.viewDist=viewDist*viewDist;
     this.spotPercent=spotPercent;
+    spotted=new HashSet<Tank>();
     //target = route.first();
     target=route.near(x,y);
   }
@@ -82,6 +85,14 @@ public class PatrolAI extends Tank {
     } else {
       delay--;
     }
+  }
+  
+  public boolean spot(float x, float y) {
+    return (random(100)<=spotPercent&&findSquareDist(this.x,this.y,x,y)<viewDist);
+  }
+  
+  public void spotted(Tank t) {
+    spotted.add(t);
   }
   
 }

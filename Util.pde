@@ -85,7 +85,7 @@ class Logger {
 }
 
 class Hasher {
-  int result;
+  private int result;
   
   final int prime;
   
@@ -103,11 +103,16 @@ class Hasher {
   }
   
   public void append(Object o) {
-    append(o.hashCode());
+    append((o==null)?0:o.hashCode());
   }
   
   public void append(int i) {
     result*=prime;
     result+=i;
+  }
+  
+  public void append(float f) {
+    result*=prime;
+    result+=(int)(f+0.5);
   }
 }

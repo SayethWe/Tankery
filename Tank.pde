@@ -11,6 +11,8 @@ class Tank extends Entity implements Hittable{
   private final float speed;
   private final float traverse;
   
+  private int hash;
+  
   protected float turretFacing;
   private int health;
   private int reloadCounter;
@@ -105,13 +107,13 @@ class Tank extends Entity implements Hittable{
     return hull.armor/sin(incidence);
   }
   
-  public void render(Renderable r, float facing) {
-    pushMatrix();
-    translate(x,y);
-    rotate(facing);
-    shape(r.getRender());
-    popMatrix();
-  }
+  //public void render(Renderable r, float facing) {
+  //  pushMatrix();
+  //  translate(x,y);
+  //  rotate(facing);
+  //  shape(r.getRender());
+  //  popMatrix();
+  //}
   
   public boolean collide(Collideable c, float facing, Shape other) {
     AffineTransform at = new AffineTransform();
@@ -168,4 +170,20 @@ class Tank extends Entity implements Hittable{
         reloadCounter--;
       }
     }
+    
+  public int hashCode() {
+    if(hash==0) {
+      Hasher hashCalc = new Hasher(11,super.hashCode());
+      hashCalc.append(hull);
+      hashCalc.append(turret);
+      hashCalc.append(cannon);
+      hashCalc.append(engine);
+      hashCalc.append(mass);
+      hashCalc.append(maxHealth);
+      hashCalc.append(speed);
+      hashCalc.append(traverse);
+      hash=hashCalc.getResult();
+    }
+    return hash;
+  }
 }

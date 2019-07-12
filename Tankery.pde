@@ -161,13 +161,12 @@ public abstract class Entity {
   public abstract void update();
   
   public int hashCode() {
-    if(hash!=0) {
-      return hash;
-    } else {
+    if(hash==0) {
       Hasher hashCalc = new Hasher(17);
       hashCalc.append(team);
       hashCalc.append(init);
-      return hashCalc.result;
+      hash=hashCalc.getResult();
     }
+    return hash;
   }
 }

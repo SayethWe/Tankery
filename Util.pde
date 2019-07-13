@@ -14,7 +14,38 @@ public static float clampedGaussian(float mean, float variance, float min, float
 
 //load a new projectile in
 static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber, int team) {
-  instance.new Projectile(x,y,direction,penetration, shellVelocity,damage,caliber,team);
+ instance.new QueuedProjectile(x,y,direction,penetration, shellVelocity,damage,caliber,team);
+}
+
+//avoid concurrent modification exceptions
+static Set<QueuedProjectile> queue = new HashSet<QueuedProjectile>();
+
+
+  
+public static void createProjectiles() {
+  for(QueuedProjectile qp:queue) {
+    instance.new Projectile(qp.x,qp.y,qp.direction,qp.penetration,qp.velocity,qp.damage,qp.caliber,qp.team);
+  }
+  queue.clear();
+}
+
+class QueuedProjectile {
+  
+  
+  public final float x,y,direction,penetration,velocity,caliber;
+  public final int damage,team;
+  
+  public QueuedProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber, int team) {
+    this.x=x;
+    this.y=y;
+    this.direction=direction;
+    this.penetration=penetration;
+    this.velocity=shellVelocity;
+    this.damage=damage;
+    this.caliber=caliber;
+    this.team=team;
+    queue.add(this);
+  }
 }
 
 //the angle between two angle.

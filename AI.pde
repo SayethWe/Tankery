@@ -1,7 +1,85 @@
 import java.util.List;
+import java.util.LinkedList;
+
+
+public abstract class AbstractAI extends Tank {
+  
+  //when to discard sightings. unsued
+  private static final long AGE_DISCARD = 10000;
+  private static final int SIGHTINGS_STORAGE = 5;
+  
+  protected final float viewDist, spotPercent;
+  protected final Map<Tank,List<Sighting>> memory;
+  protected Tank target;
+  
+  public AbstractAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team) {
+    super(x,y,facing,turretFacing,team);
+    this.viewDist=viewDist*viewDist;
+    this.spotPercent=spotPercent;
+    memory=new HashMap<Tank,List<Sighting>>();
+  }
+  
+  public AbstractAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, Prebuild build, int team) {
+    super(x,y,facing,turretFacing,build,team);
+    this.viewDist=viewDist*viewDist;
+    this.spotPercent=spotPercent;
+    memory=new HashMap<Tank,List<Sighting>>();
+  }
+  
+  public AbstractAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine) {
+    super(x,y,facing,turretFacing,hull,turret,cannon,engine,team);
+    this.viewDist=viewDist*viewDist;
+    this.spotPercent=spotPercent;
+    memory=new HashMap<Tank,List<Sighting>>();
+  }
+  
+  public void addToTrackers() {
+    super.addToTrackers();
+    robots.add(this);
+  }
+  
+  public boolean spot(float x, float y) {
+    return (random(100)<=spotPercent&&findSquareDist(this.x,this.y,x,y)<viewDist);
+  }
+  
+  public void spotted(Tank t) {
+    println(this+" Spotted "+t);
+    memory.putIfAbsent(t,new LinkedList<Sighting>());
+    List sightings = memory.get(t);
+    sightings.add(new Sighting(t));
+    while(sightings.size() >= SIGHTINGS_STORAGE) sightings.remove(0);
+  }
+  
+  public void update() {
+    super.update();
+    target = bestTarget();
+    doMovement();
+  }
+  
+  private Tank bestTarget() {
+    Tank bestTank=null;
+    int bestScore=0;
+    for(Tank t:memory.keySet()) {
+      int score = targetValue(t);
+      if(score > bestScore) {
+        bestScore=score;
+        bestTank=t;
+      }
+    }
+    return bestTank;
+  }
+  
+  //negative values mean a bad target, one to not go after. positive values mean that it's valid, and desirable. the higher the value, the more desirable.
+  protected abstract int targetValue(Tank t);
+  protected abstract void doMovement();
+  
+}
+
+public class PatrolAI extends AbstractAI {
 
 //an AI that moves along a specific path
 public class PatrolAI extends Tank {
+
   private final float ANGLE_EPSILON = PI/100;
   private final float ANGLE_TURN = PI/4;
   private final float ANGLE_DRIVE = PI/8;
@@ -9,20 +87,27 @@ public class PatrolAI extends Tank {
   private final float DIST_SLOW = 50*50;
   
   private final Route route;
-  private Node target;
+  
+  private Node targetNode;
   private int delay=0;
   
-  public PatrolAI(float x, float y, float facing, float turretFacing, int team, Route route) {
-    super(x,y,facing,turretFacing,team);
+  public PatrolAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Route route) {
+    super(x,y,facing,turretFacing,viewDist,spotPercent,team);
     this.route=route;
-    target = route.first();
+    targetNode = route.first();
   }
   
-  public PatrolAI(float x, float y, float facing, float turretFacing, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route) {
-    super(x,y,facing,turretFacing,hull,turret,cannon,engine,team);
+  public PatrolAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, Prebuild build, int team, Route route) {
+    super(x,y,facing,turretFacing,viewDist,spotPercent,build,team);
+    this.route=route;
+    targetNode = route.first();
+  }
+  
+  public PatrolAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route) {
+    super(x,y,facing,turretFacing,viewDist,spotPercent,team,hull,turret,cannon,engine);
     this.route=route;
     //target = route.first();
-    target=route.near(x,y);
+    targetNode=route.near(x,y);
   }
   
   //debug render
@@ -31,31 +116,23 @@ public class PatrolAI extends Tank {
     noFill();
     stroke(0);
     ellipseMode(RADIUS);
-    ellipse(target.x,target.y,sqrt(target.tolerance),sqrt(target.tolerance));
+    ellipse(targetNode.x,targetNode.y,sqrt(targetNode.tolerance),sqrt(targetNode.tolerance));
     rectMode(CORNERS);
-    line(x,y,target.x,target.y);
+    line(x,y,targetNode.x,targetNode.y);
   }
   
-  public void update() {
-    super.update();
-    //this.moveTo(vehicle);
-    //this.turnTo(vehicle);
-    
+  protected void doMovement() {
     if(delay<=0) {
-      float dist = findSquareDist(x,y,target.x,target.y)-target.tolerance;
+      float dist = findSquareDist(x,y,targetNode.x,targetNode.y)-targetNode.tolerance;
       //println("distance: " + dist);
       if(dist<=0) {
+        delay=targetNode.delay;
         brake();
-        delay=target.delay;
         logger.log(this+" reached target node at:"+x+","+y+", proceeding to next node");
-        target=route.next();
+        targetNode=route.next();
         return;
       } else {
-        float targetAngle=(atan2(target.y-y,target.x-x)+TWO_PI)%TWO_PI;
-        //stroke(255,0,0);
-        //line(x,y,x+20*cos(targetAngle),y+20*sin(targetAngle));
-        
-        //float angleDel = lessMassive((facing-targetAngle),(targetAngle-facing));
+        float targetAngle=atan2(targetNode.y-y,targetNode.x-x);
         float angleDel=angleBetween(facing,targetAngle);
         //println("Angle difference: "+angleDel+"="+facing+" - "+targetAngle);
         if (angleDel < -ANGLE_TURN) {
@@ -74,6 +151,30 @@ public class PatrolAI extends Tank {
     } else {
       brake();
       delay--;
+    }
+    
+    if(target!=null) {
+      Sighting mostRecent = memory.get(target).get(memory.get(target).size()-1);
+      float angleDel=angleBetween(turretFacing,atan2(mostRecent.y-y,mostRecent.x-x));
+      if (angleDel < -ANGLE_TURN) {
+        aimTurret(1);
+      } else if (angleDel>ANGLE_TURN) {
+        aimTurret(-1);
+      } else if(angleDel<-ANGLE_EPSILON) {
+        aimTurret(0.5);
+      } else if (angleDel>ANGLE_EPSILON) {
+        aimTurret(-0.5);
+      } else {
+        fire();
+      }
+    }
+  }
+  
+  protected int targetValue(Tank t) {
+    if(t.getTeam() == team) { 
+      return -1;
+    } else {
+      return 1; //TODO
     }
   }
   
@@ -175,6 +276,27 @@ public class Node {
   
   public float distTo(float x, float y) {
     return findSquareDist(x,y,this.x,this.y);
+  }
+  
+}
+
+public class Sighting {
+  
+  public final float x,y,facing,turretFacing;
+  public final byte team;
+  private final long initTime;
+  
+  public Sighting(Tank t) {
+    this.initTime=millis();
+    this.x=t.getX();
+    this.y=t.getY();
+    this.facing=t.getFacing();
+    this.turretFacing=t.getTurretFacing();
+    this.team=t.getTeam();
+  }
+  
+  public long getAge() {
+    return millis()-initTime;
   }
   
 }

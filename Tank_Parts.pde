@@ -155,3 +155,20 @@ enum Engine {
     this.mass=mass;
   }
 }
+
+enum Prebuild {
+  TEST(Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST),
+  FAST(Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.FAST);
+  
+  public final Hull hull;
+  public final Turret turret;
+  public final Cannon cannon;
+  public final Engine engine;
+  
+  private Prebuild(Hull h, Turret t, Cannon c, Engine e) {
+    this.hull=h;
+    this.turret=t;
+    this.cannon=c;
+    this.engine=e;
+  }
+}

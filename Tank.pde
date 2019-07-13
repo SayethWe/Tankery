@@ -24,8 +24,17 @@ class Tank extends Entity implements Hittable, Impactor {
     this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,team);
   }
   
+
+  public Tank(Prebuild build, int team) {
+    this(width/2,height/2,0,0,build,team);
+  }
+  
   public Tank(float x, float y, float facing, float turretFacing, int team) {
     this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,team);
+  }
+
+  public Tank(float x, float y, float facing, float turretFacing, Prebuild build, int team) {
+    this(x,y,facing,turretFacing,build.hull,build.turret,build.cannon,build.engine,team);
   }
   
   //public Tank(float x, float y, float facing, float turretFacing, Random random, int team) {

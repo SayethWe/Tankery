@@ -23,6 +23,7 @@ Player testGunner;
 public static final Set<Entity>entities=new HashSet<Entity>();
 public static final Set<Impactor>impactors=new HashSet<Impactor>();
 public static final Set<Hittable>hittables=new HashSet<Hittable>();
+public static final Set<AbstractAI>robots=new HashSet<AbstractAI>();
 
 //Things that should be removed from the trackers
 Set<Entity>toRemove=new HashSet<Entity>();
@@ -41,11 +42,13 @@ void setup() {
   //Create some tanks to play with
   playerTank = new Tank(1);
   new Tank(200,300,PI/3,PI/2,0);
-  new PatrolAI(500,400,PI/4,PI/6,0,Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.FAST,testRoute());
-  new PatrolAI(650,75,PI,3*PI/5,0,testRoute());
-  new PatrolAI(100,600,PI/2,PI/2,0,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
+  new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
+  new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());
+  new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
+
   
   //initialize the test roles
+
   testPlayer = new TestPlayer();
   testCommander = new Commander(playerTank);
   testGunner=new Gunner(playerTank);
@@ -73,13 +76,18 @@ void dispose() {
 
 //go through everything we track, and update then draw them
 public void updateAll() {
+  createProjectiles();
   for (Entity e:entities){
     e.update();
     e.render();
   }
+  for (AbstractAI robot:robots) {
+    if(robot.spot(playerTank.getX(),playerTank.getY())) robot.spotted(playerTank);
+  }
   impactors.removeAll(toRemove);
   entities.removeAll(toRemove);
   hittables.removeAll(toRemove);
+  robots.removeAll(toRemove);
   toRemove.clear();
 }
 

@@ -5,8 +5,8 @@ import java.util.stream.*;
 //keys that are currently being held
 Map<Keybind,Boolean>keys=new EnumMap<Keybind,Boolean>(Keybind.class);
 
-Map<Character,Keybind>keybinds = dvorakLayout();
-//Map<Character,Keybind>keybinds = qwertyLayout();
+//Map<Character,Keybind>keybinds = dvorakLayout();
+Map<Character,Keybind>keybinds = qwertyLayout();
 
 void keyPressed() {
   if(key!=CODED){

@@ -1,6 +1,7 @@
 import java.awt.geom.Area;
 import java.util.Random;
 
+//the drivey bit that makes up the real meat of the game
 class Tank extends Entity implements Hittable, Impactor {
   private final Hull hull;
   private final Turret turret;
@@ -23,6 +24,7 @@ class Tank extends Entity implements Hittable, Impactor {
     this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,team);
   }
   
+
   public Tank(Prebuild build, int team) {
     this(width/2,height/2,0,0,build,team);
   }
@@ -30,7 +32,7 @@ class Tank extends Entity implements Hittable, Impactor {
   public Tank(float x, float y, float facing, float turretFacing, int team) {
     this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,team);
   }
-  
+
   public Tank(float x, float y, float facing, float turretFacing, Prebuild build, int team) {
     this(x,y,facing,turretFacing,build.hull,build.turret,build.cannon,build.engine,team);
   }
@@ -97,8 +99,6 @@ class Tank extends Entity implements Hittable, Impactor {
   }
   
   public boolean contains(Area collider) {
-    //TODO: Use java.awt.shape for collision detection
-    //return(dist(this.x,this.y,x,y)<20);
     Area col = getCollider();
     col.intersect(collider);
     return !col.isEmpty();
@@ -162,23 +162,23 @@ class Tank extends Entity implements Hittable, Impactor {
   }
   
   public void reloadStep(boolean wasLoader) {
-      if(wasLoader) {
-        reloadCounter=0;
-      } else if (reloadCounter>0) {
-        reloadCounter--;
-      }
+    if(wasLoader) {
+      reloadCounter=0;
+    } else if (reloadCounter>0) {
+      reloadCounter--;
     }
+  }
     
-    public Area getCollider() {
-      AffineTransform at = new AffineTransform();
-      at.translate(x,y);
-      at.rotate(facing);
-      Area collider = new Area(at.createTransformedShape(hull.collision));
-      at.translate(hull.turretOffset,0);
-      at.rotate(turretFacing-facing);
-      collider.add(new Area(at.createTransformedShape(turret.collision)));
-      return collider;
-    }
+  public Area getCollider() {
+    AffineTransform at = new AffineTransform();
+    at.translate(x,y);
+    at.rotate(facing);
+    Area collider = new Area(at.createTransformedShape(hull.collision));
+    at.translate(hull.turretOffset,0);
+    at.rotate(turretFacing-facing);
+    collider.add(new Area(at.createTransformedShape(turret.collision)));
+    return collider;
+  }
     
   public int impact(Hittable h) {
     //println("tank collision");

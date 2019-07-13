@@ -1,7 +1,7 @@
 /*
 * A Co-operative tanking game Demo
 * Started 03 July 2019
-* Last Update 09 July 2019
+* Last Update 12 July 2019
 * By Sayeth_We
 */
 
@@ -39,17 +39,21 @@ void setup() {
   //surface.setResizable(true);
   noSmooth();
   
-  //Tank aiTank;
+  //Create some tanks to play with
   playerTank = new Tank(1);
   new Tank(200,300,PI/3,PI/2,0);
   new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
   new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());
   new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
+
+  
+  //initialize the test roles
+
   testPlayer = new TestPlayer();
   testCommander = new Commander(playerTank);
   testGunner=new Gunner(playerTank);
   testDriver=new Driver(playerTank);
-  //entities.add(testPlayer=testCommander);
+  
   logger.log("Startup sucessful");
 }
 
@@ -59,17 +63,18 @@ void draw() {
   handleKeys();
   updateAll();
   handleCollisions();
-  //renderAll();
   handleFog(); //Must be penultimate call
   drawUI(); //must be last call
 }
 
+//called when the program closes
 void dispose() {
   logger.dispose();
   println("Shutting down");
   exit();
 }
 
+//go through everything we track, and update then draw them
 public void updateAll() {
   createProjectiles();
   for (Entity e:entities){
@@ -86,6 +91,7 @@ public void updateAll() {
   toRemove.clear();
 }
 
+//check if things are occupying the same space.
 public void handleCollisions() {
   for(Impactor i :impactors) {
     for(Hittable h: hittables) {
@@ -96,6 +102,7 @@ public void handleCollisions() {
   }
 }
 
+//something that can be hit
 interface Hittable {
   public boolean contains(Area collider);
   public void damage(int damage);
@@ -103,19 +110,21 @@ interface Hittable {
   public byte getTeam();
 }
 
+//something that can hit anotehr thing
 interface Impactor {
-  public int impact(Hittable h);
+  public int impact(Hittable h); //returns how much damage it did
   public float getFacing();
   public Area getCollider();
   public byte getTeam();
 }
 
+//the tracking class. things that can be moved, turned and drawn.
 public abstract class Entity {
   protected float x,y,facing;
   protected final byte team;
   protected final long init;
   
-  protected int hash; //coching teh Hashcode after it's called;
+  protected int hash; //caching the Hashcode after it's called;
   
   public Entity(float x,float y,float facing, int team) {
     if(team>Byte.MAX_VALUE) throw new IllegalArgumentException();

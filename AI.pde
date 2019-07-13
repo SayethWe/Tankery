@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.LinkedList;
 
+
 public abstract class AbstractAI extends Tank {
   
   //when to discard sightings. unsued
@@ -75,6 +76,10 @@ public abstract class AbstractAI extends Tank {
 }
 
 public class PatrolAI extends AbstractAI {
+
+//an AI that moves along a specific path
+public class PatrolAI extends Tank {
+
   private final float ANGLE_EPSILON = PI/100;
   private final float ANGLE_TURN = PI/4;
   private final float ANGLE_DRIVE = PI/8;
@@ -122,6 +127,7 @@ public class PatrolAI extends AbstractAI {
       //println("distance: " + dist);
       if(dist<=0) {
         delay=targetNode.delay;
+        brake();
         logger.log(this+" reached target node at:"+x+","+y+", proceeding to next node");
         targetNode=route.next();
         return;
@@ -139,11 +145,7 @@ public class PatrolAI extends AbstractAI {
           turn(-0.5);
         }
         if (abs(angleDel) < ANGLE_DRIVE) {
-          if(dist>DIST_SLOW) {
-            drive(1);
-          } else {
-            drive(0.5);
-          }
+          drive(1);
         }
       }
     } else {
@@ -178,6 +180,7 @@ public class PatrolAI extends AbstractAI {
   
 }
 
+//A route for a patrol tank to follow
 public class Route {
   
   private final List<Node> path;
@@ -256,6 +259,7 @@ static Route testBack() {
   return instance.new Route(path, false);
 }
 
+//a single point along a route
 public class Node {
   
   final float x;

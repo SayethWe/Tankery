@@ -1,5 +1,6 @@
 import java.awt.geom.Ellipse2D;
 
+//a flying thing that can do damage
 class Projectile extends Entity implements Impactor{
   private static final float PEN_LOSS_ON_BOUNCE = 0.1;
   private static final float DAMAGE_VARIANCE = 0.1;
@@ -68,7 +69,8 @@ class Projectile extends Entity implements Impactor{
     logger.log(this+ "armed at "+x+","+y+" with heading "+facing+"rad");
   }
   
-  public int genDamage(float meanDamage) {
+  //load how much damage this is going to do, based on a gaussian curve
+  private int genDamage(float meanDamage) {
     float variance = DAMAGE_VARIANCE*meanDamage;
     float maxVariance = MAX_DAMAGE_VARIANCE*meanDamage;
     return int(clampedGaussian(meanDamage, variance, meanDamage-maxVariance, meanDamage+maxVariance));

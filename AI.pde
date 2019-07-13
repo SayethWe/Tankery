@@ -3,29 +3,38 @@ import java.util.LinkedList;
 
 public abstract class AbstractAI extends Tank {
   
+  //when to discard sightings. unsued
+  private static final long AGE_DISCARD = 10000;
+  private static final int SIGHTINGS_STORAGE = 5;
+  
   protected final float viewDist, spotPercent;
-  protected final Map<Tank,List<Sighting>> spotted;
+  protected final Map<Tank,List<Sighting>> memory;
   protected Tank target;
   
   public AbstractAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team) {
     super(x,y,facing,turretFacing,team);
     this.viewDist=viewDist*viewDist;
     this.spotPercent=spotPercent;
-    spotted=new HashMap<Tank,List<Sighting>>();
+    memory=new HashMap<Tank,List<Sighting>>();
   }
   
   public AbstractAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, Prebuild build, int team) {
     super(x,y,facing,turretFacing,build,team);
     this.viewDist=viewDist*viewDist;
     this.spotPercent=spotPercent;
-    spotted=new HashMap<Tank,List<Sighting>>();
+    memory=new HashMap<Tank,List<Sighting>>();
   }
   
   public AbstractAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine) {
     super(x,y,facing,turretFacing,hull,turret,cannon,engine,team);
     this.viewDist=viewDist*viewDist;
     this.spotPercent=spotPercent;
-    spotted=new HashMap<Tank,List<Sighting>>();
+    memory=new HashMap<Tank,List<Sighting>>();
+  }
+  
+  public void addToTrackers() {
+    super.addToTrackers();
+    robots.add(this);
   }
   
   public boolean spot(float x, float y) {
@@ -33,9 +42,11 @@ public abstract class AbstractAI extends Tank {
   }
   
   public void spotted(Tank t) {
-    spotted.putIfAbsent(t,new LinkedList<Sighting>());
-    List sightings = spotted.get(t);
+    println(this+" Spotted "+t);
+    memory.putIfAbsent(t,new LinkedList<Sighting>());
+    List sightings = memory.get(t);
     sightings.add(new Sighting(t));
+    while(sightings.size() >= SIGHTINGS_STORAGE) sightings.remove(0);
   }
   
   public void update() {
@@ -47,10 +58,11 @@ public abstract class AbstractAI extends Tank {
   private Tank bestTarget() {
     Tank bestTank=null;
     int bestScore=0;
-    for(Tank t:spotted.keySet()) {
+    for(Tank t:memory.keySet()) {
       int score = targetValue(t);
       if(score > bestScore) {
-        
+        bestScore=score;
+        bestTank=t;
       }
     }
     return bestTank;
@@ -137,6 +149,22 @@ public class PatrolAI extends AbstractAI {
     } else {
       brake();
       delay--;
+    }
+    
+    if(target!=null) {
+      Sighting mostRecent = memory.get(target).get(memory.get(target).size()-1);
+      float angleDel=angleBetween(turretFacing,atan2(mostRecent.y-y,mostRecent.x-x));
+      if (angleDel < -ANGLE_TURN) {
+        aimTurret(1);
+      } else if (angleDel>ANGLE_TURN) {
+        aimTurret(-1);
+      } else if(angleDel<-ANGLE_EPSILON) {
+        aimTurret(0.5);
+      } else if (angleDel>ANGLE_EPSILON) {
+        aimTurret(-0.5);
+      } else {
+        fire();
+      }
     }
   }
   

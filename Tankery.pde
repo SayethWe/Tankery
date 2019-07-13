@@ -23,6 +23,7 @@ Player testGunner;
 public static final Set<Entity>entities=new HashSet<Entity>();
 public static final Set<Impactor>impactors=new HashSet<Impactor>();
 public static final Set<Hittable>hittables=new HashSet<Hittable>();
+public static final Set<AbstractAI>robots=new HashSet<AbstractAI>();
 
 //Things that should be removed from the trackers
 Set<Entity>toRemove=new HashSet<Entity>();
@@ -70,13 +71,18 @@ void dispose() {
 }
 
 public void updateAll() {
+  createProjectiles();
   for (Entity e:entities){
     e.update();
     e.render();
   }
+  for (AbstractAI robot:robots) {
+    if(robot.spot(playerTank.getX(),playerTank.getY())) robot.spotted(playerTank);
+  }
   impactors.removeAll(toRemove);
   entities.removeAll(toRemove);
   hittables.removeAll(toRemove);
+  robots.removeAll(toRemove);
   toRemove.clear();
 }
 

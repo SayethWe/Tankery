@@ -41,7 +41,8 @@ void setup() {
   
 
   //Drawe in some collision
-  new Obstacle(100,100,PI/4,new float[]{-10,20,20,-10},new float[]{-10,-10,15,15},4);
+  new Obstacle(100,250,PI/4,new float[]{-10,20,20,-10},new float[]{-10,-10,15,15},4);
+  new Obstacle(700,650,7*PI/8,new float[]{-20,20,30,-30},new float[]{10,10,0,0},4);
 
   //Create some tanks to play with
   playerTank = new Tank(1);
@@ -66,7 +67,7 @@ void draw() {
   handleKeys();
   updateAll();
   handleCollisions();
-  handleFog(); //Must be penultimate call
+  //handleFog(); //Must be penultimate call
   drawUI(); //must be last call
 }
 

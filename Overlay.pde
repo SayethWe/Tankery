@@ -3,6 +3,7 @@
 Set<Alert> alerts = new HashSet<Alert>();
 Set<Alert> deadAlerts = new HashSet<Alert>();
 
+//draw the user interface on top of the screen. right now, just health.
 public void drawUI() {
     float healthWidth=width*playerTank.getHealth()/playerTank.maxHealth;
     int healthHeight = 15;
@@ -24,6 +25,7 @@ void handleAlerts() {
   deadAlerts.clear();
 }
 
+//occlude space the player cannot see
 void handleFog() {
   int fogScale=testPlayer.getFogScale();
   int tpx=int(testPlayer.getX());
@@ -52,12 +54,15 @@ void handleFog() {
   rect(0,tpy+tpv,tpx+tpv, height);
 }
 
+//create a commander alert at a certain place.
 int addAlert(float x, float y, AlertLevel level){
   alerts.add(new Alert(x,y,level));
   logger.log(level + " alert spawned at " +x+","+y);
   return level.duration/3;
 }
 
+
+//A possibly flashing marker to let players know to look here.
 class Alert{
   
   //private static final int DURATION = 90;

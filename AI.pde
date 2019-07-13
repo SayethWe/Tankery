@@ -1,5 +1,6 @@
 import java.util.List;
 
+//an AI that moves along a specific path
 public class PatrolAI extends Tank {
   private final float ANGLE_EPSILON = PI/100;
   private final float ANGLE_TURN = PI/4;
@@ -78,6 +79,7 @@ public class PatrolAI extends Tank {
   
 }
 
+//A route for a patrol tank to follow
 public class Route {
   
   private final List<Node> path;
@@ -156,6 +158,7 @@ static Route testBack() {
   return instance.new Route(path, false);
 }
 
+//a single point along a route
 public class Node {
   
   final float x;

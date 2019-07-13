@@ -1,24 +1,29 @@
+//distance, squared. slightly faster by virtue of not using sqrt
 public float findSquareDist(float x1, float y1, float x2, float y2){
   float xDist= x1-x2;
   float yDist= y1-y2;
   return (xDist*xDist)+(yDist*yDist);
 }
 
+//basic statistics on a normal distribution
 public static float clampedGaussian(float mean, float variance, float min, float max) {
   float rand = instance.randomGaussian();
-  float calcDamage = rand*variance+mean;
-  return constrain(calcDamage, min, max);
+  float calc = rand*variance+mean;
+  return constrain(calc, min, max);
 }
 
+//load a new projectile in
 static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber, int team) {
-  entities.add(instance.new Projectile(x,y,direction,penetration, shellVelocity,damage,caliber,team));
+  instance.new Projectile(x,y,direction,penetration, shellVelocity,damage,caliber,team);
 }
 
+//the angle between two angle.
 static float angleBetween(float a, float b) {
   float diff = ( a - b + PI ) % TWO_PI - PI;
   return diff < -PI ? diff + TWO_PI : diff;
 }
 
+//current date, formatted
 String formattedDate(char sep) {
   StringBuilder result = new StringBuilder();
   result.append(nf(year(),4)).append(sep);
@@ -28,13 +33,15 @@ String formattedDate(char sep) {
   return result.toString();
 }
 
+//save a screenshot
 void screenshot() {
   noLoop();
-  save("screenshots/screenshot_"+formattedDate('-')+formattedTime('-')+".png");
+  save("screenshots/screenshot_"+formattedDate('-')+'_'+formattedTime('-')+".png");
   logger.log("Screenshot saved");
   loop();
 }
 
+//current time, formatted
 String formattedTime(char sep) {
   StringBuilder result = new StringBuilder();
   result.append(nf(hour(),2)).append(sep);
@@ -43,11 +50,13 @@ String formattedTime(char sep) {
   return result.toString();
 }
 
+//if a number is positive, negative, or 0
 int sign(float f) {
   if (f==0) return 0;
   return (f<0)?-1:1;
 }
 
+//log level stuff
 enum LogLevel {
   
   ERROR("[ERROR] "),
@@ -61,6 +70,7 @@ enum LogLevel {
   
 }
 
+//A logger that writes to a log file.
 class Logger {
   
   final PrintWriter logFile;
@@ -89,6 +99,7 @@ class Logger {
   
 }
 
+//Helpful function to create hashcodes.
 class Hasher {
   private int result;
   

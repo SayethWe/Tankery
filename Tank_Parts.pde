@@ -10,6 +10,7 @@ interface Renderable {
   public PShape getRender();
 }
 
+//a utility class to generate renders and colliders
 static class PartBuilder {
   public static Shape createCollision(float[] xPoints, float[] yPoints, int points) {
     if(!(xPoints.length==points&&yPoints.length==points)) throw new IllegalArgumentException();
@@ -30,6 +31,7 @@ static class PartBuilder {
   }
 }
 
+//the main body. responsible for armor, part of the health, and movement resistance.
 enum Hull implements Collideable, Renderable{
   
   TEST(70,20.0,70,2.5,0,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54),
@@ -63,6 +65,7 @@ enum Hull implements Collideable, Renderable{
   }
 }
  
+//the bit which the cannon fits in. Responsible for aiming and part of the tank's health
 enum Turret implements Collideable, Renderable{
   
   TEST(PI/20,5.0,30,10,new float[]{20,-10,-10},new float[]{0,17.3,-17.3},3,#6E52FF,#6E52FF),
@@ -95,6 +98,7 @@ enum Turret implements Collideable, Renderable{
   }
 }
 
+//The shooty-bit. Responsible for most of the offensive capabilities.
 enum Cannon implements Renderable {
     TEST(50,75,10,6,2.5,PI/100,PI/20,3.5,new float[]{0,30,30,0},new float[]{-2,-2,2,2},4,#CD3F66,#000000),
     SHORT(100,100,30,3,1.5,PI/20,PI/10,4.3,new float[]{0,15,17,17,15,0},new float[]{-2.5,-2.5,-4,4,2.5,2.5}, 6, #5F4C22, #2E2309);
@@ -131,6 +135,7 @@ enum Cannon implements Renderable {
     }
 }
 
+//The thing what drives the movement
 enum Engine {
   TEST(1.5,1.25,2,-1,1.0,5.0),
   FAST(1,1.5,4,-1.5,1.0,4.5),

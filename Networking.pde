@@ -3,6 +3,7 @@ import processing.net.Client;
 
 static final int DEFAULT_PORT = 21006;
 
+//server-side code
 class TankeryServer extends Server {
   
   public TankeryServer() {
@@ -19,6 +20,7 @@ class TankeryServer extends Server {
   
 }
 
+//client-side code
 class TankeryClient extends Client {
   public TankeryClient (String host) {
     super(instance,host,DEFAULT_PORT);

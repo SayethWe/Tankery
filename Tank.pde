@@ -1,6 +1,7 @@
 import java.awt.geom.Area;
 import java.util.Random;
 
+//the drivey bit that makes up the real meat of the game
 class Tank extends Entity implements Hittable, Impactor {
   private final Hull hull;
   private final Turret turret;
@@ -19,29 +20,21 @@ class Tank extends Entity implements Hittable, Impactor {
   private int reloadCounter;
   private boolean isDead=false;
   
-  //public Tank() {
-  //  this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,0);
-  //}
-  
   public Tank(int team) {
     this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,team);
   }
-  
-  //public Tank(float x, float y, float facing, float turretFacing) {
-  //  this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,0);
-  //}
   
   public Tank(float x, float y, float facing, float turretFacing, int team) {
     this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,team);
   }
   
-  //public Tank(float x, float y, float facing, float turretFacing, Random random) {
+  //public Tank(float x, float y, float facing, float turretFacing, Random random, int team) {
   //  this(x,y,facing,turretFacing,
   //  Hull.values()[random.nextInt(Hull.values().length)],
   //  Turret.values()[random.nextInt(Turret.values().length)],
   //  Cannon.values()[random.nextInt(Turret.values().length)],
   //  Engine.values()[random.nextInt(Turret.values().length)]
-  //  ,0);
+  //  ,team);
   //}
   
   public Tank(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine, int team) {
@@ -97,8 +90,6 @@ class Tank extends Entity implements Hittable, Impactor {
   }
   
   public boolean contains(Area collider) {
-    //TODO: Use java.awt.shape for collision detection
-    //return(dist(this.x,this.y,x,y)<20);
     Area col = getCollider();
     col.intersect(collider);
     return !col.isEmpty();
@@ -162,23 +153,23 @@ class Tank extends Entity implements Hittable, Impactor {
   }
   
   public void reloadStep(boolean wasLoader) {
-      if(wasLoader) {
-        reloadCounter=0;
-      } else if (reloadCounter>0) {
-        reloadCounter--;
-      }
+    if(wasLoader) {
+      reloadCounter=0;
+    } else if (reloadCounter>0) {
+      reloadCounter--;
     }
+  }
     
-    public Area getCollider() {
-      AffineTransform at = new AffineTransform();
-      at.translate(x,y);
-      at.rotate(facing);
-      Area collider = new Area(at.createTransformedShape(hull.collision));
-      at.translate(hull.turretOffset,0);
-      at.rotate(turretFacing-facing);
-      collider.add(new Area(at.createTransformedShape(turret.collision)));
-      return collider;
-    }
+  public Area getCollider() {
+    AffineTransform at = new AffineTransform();
+    at.translate(x,y);
+    at.rotate(facing);
+    Area collider = new Area(at.createTransformedShape(hull.collision));
+    at.translate(hull.turretOffset,0);
+    at.rotate(turretFacing-facing);
+    collider.add(new Area(at.createTransformedShape(turret.collision)));
+    return collider;
+  }
     
   public int impact(Hittable h) {
     //println("tank collision");

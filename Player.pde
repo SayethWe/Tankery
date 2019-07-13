@@ -1,3 +1,4 @@
+//the bit what does the thinky-stuff for the person behind the keyboard
 abstract class Player extends Entity {
   //private final float viewAngle;
   //private final float viewDistance;
@@ -61,6 +62,7 @@ abstract class Player extends Entity {
   abstract public void handleKeyInput(Keybind kb);
 }
 
+//A multi-tasking role for testing purposes
 public class TestPlayer extends Player {
   public TestPlayer() {
     this(playerTank);
@@ -113,6 +115,7 @@ public class TestPlayer extends Player {
   }
 }
 
+//Spots things, gives alerts.
 public class Commander extends Player {
   private static final float TURN_RATE = PI/15;
   //private static final int ALERT_COOLDOWN = 50;
@@ -171,6 +174,7 @@ public class Commander extends Player {
   }
 }
 
+//moves the tank
 public class Driver extends Player {
   public Driver(Tank vehicle) {
     super(vehicle, new ViewField(PI/2, 160, 2));
@@ -213,6 +217,7 @@ public class Driver extends Player {
   }
 }
 
+//spins the turret, shoots at bad guys
 public class Gunner extends Player {
   public Gunner(Tank vehicle) {
     super(vehicle, new ViewField(PI/6, 70, 1), new ViewField(PI/10,140,2));
@@ -257,6 +262,7 @@ public class Gunner extends Player {
   }
 }
 
+//a certain space that can be seen
 public class ViewField {
   
   private final float viewAngle;

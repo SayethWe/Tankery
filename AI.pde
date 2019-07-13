@@ -75,10 +75,9 @@ public abstract class AbstractAI extends Tank {
   
 }
 
+//an AI that moves along a specific path
 public class PatrolAI extends AbstractAI {
 
-//an AI that moves along a specific path
-public class PatrolAI extends Tank {
 
   private final float ANGLE_EPSILON = PI/100;
   private final float ANGLE_TURN = PI/4;

@@ -44,6 +44,9 @@ void setup() {
   new PatrolAI(500,400,PI/4,PI/6,Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.TEST,testRoute());
   new PatrolAI(650,75,PI,3*PI/5,testRoute());
   new PatrolAI(100,600,PI/2,PI/2,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
+  
+  new Obstacle(100,100,PI/4,new float[]{-10,20,20,-10},new float[]{-10,-10,15,15},4);
+  
   testPlayer = new TestPlayer();
   testCommander = new Commander(playerTank);
   testGunner=new Gunner(playerTank);

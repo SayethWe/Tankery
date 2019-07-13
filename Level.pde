@@ -6,7 +6,7 @@ public abstract class Level {
   public Level() {
     enemies = new HashSet<Entity>();
     terrain = new HashSet<Obstacle>();
-    playerTank = new Tank();
+    playerTank = new Tank(1);
   }
   
   public void addEnemy(Entity enemy) {
@@ -32,7 +32,7 @@ public class Obstacle extends Entity implements Hittable {
   final PShape render;
   
   public Obstacle(float x, float y, float facing, float[] xPoints, float[] yPoints, int vertices) {
-    super(x,y,facing); 
+    super(x,y,facing,127); 
     AffineTransform at = new AffineTransform();
     at.translate(x,y);
     at.rotate(facing);
@@ -48,8 +48,10 @@ public class Obstacle extends Entity implements Hittable {
   
   public void damage(int damage) {}
   
-  public boolean contains(Shape other) {
-    return collider.intersects(other.getBounds());
+  public boolean contains(Area other) {
+    Area col = new Area(collider);
+    col.intersect(other);
+    return !col.isEmpty();
   }
   
   public float getThickness(float facing) {

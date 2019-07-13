@@ -1,5 +1,6 @@
 import java.awt.geom.Ellipse2D;
 
+//a flying thing that can do damage
 class Projectile extends Entity implements Impactor{
   private static final float PEN_LOSS_ON_BOUNCE = 0.1;
   private static final float DAMAGE_VARIANCE = 0.1;
@@ -9,15 +10,17 @@ class Projectile extends Entity implements Impactor{
   float penetration;
   float velocity;
   final float meanDamage;
+  final int damage;
   final float caliber;
   byte age = 0;
   private boolean armed=false;
   
-  public Projectile(float x, float y, float angle, float penetration,float velocity,float damage,float caliber) {
-    super(x,y,angle);
+  public Projectile(float x, float y, float angle, float penetration, float velocity,float damage,float caliber,int team) {
+    super(x,y,angle,team);
     this.penetration=penetration;
     this.velocity=velocity;
     this.meanDamage=damage;
+    this.damage=genDamage(damage);
     this.caliber=caliber;
   }
   
@@ -43,17 +46,21 @@ class Projectile extends Entity implements Impactor{
     ellipse(x,y,caliber,caliber);
   }
   
-  public int impact(float thickness) {
+  public int impact(Hittable h) {
+    float thickness = h.getThickness(facing);
     if(thickness<penetration&&armed) {
+      h.damage(damage);
       markToRemove();
-      return getDamage();
+      return damage;
     } else {
+      //Todo: Bouncing
+      markToRemove();
       return 0;
     }
   }
   
-  public Shape getCollider() {
-    return new Ellipse2D.Float(x,y,caliber,caliber);
+  public Area getCollider() {
+    return new Area(new Ellipse2D.Float(x,y,caliber,caliber));
   }
   
   private void arm() {
@@ -62,7 +69,8 @@ class Projectile extends Entity implements Impactor{
     logger.log(this+ "armed at "+x+","+y+" with heading "+facing+"rad");
   }
   
-  public int getDamage() {
+  //load how much damage this is going to do, based on a gaussian curve
+  private int genDamage(float meanDamage) {
     float variance = DAMAGE_VARIANCE*meanDamage;
     float maxVariance = MAX_DAMAGE_VARIANCE*meanDamage;
     return int(clampedGaussian(meanDamage, variance, meanDamage-maxVariance, meanDamage+maxVariance));

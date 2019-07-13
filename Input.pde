@@ -2,10 +2,8 @@ import java.util.Map;
 import java.util.EnumMap;
 import java.util.stream.*;
 
+//keys that are currently being held
 Map<Keybind,Boolean>keys=new EnumMap<Keybind,Boolean>(Keybind.class);
-
-Map<Character,Keybind>keybinds = dvorakLayout();
-//Map<Character,Keybind>keybinds = qwertyLayout();
 
 void keyPressed() {
   if(key!=CODED){
@@ -25,6 +23,9 @@ void keyPressed() {
       break;
       case ']':
       playerTank.damage(-5);
+      break;
+      case '\\':
+      screenshot();
       break;
       case '=':
       stop();

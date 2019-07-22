@@ -114,7 +114,7 @@ public class TestPlayer extends Player {
   
   public void update() {
     super.update();
-    turnTo(playerTank.getTurretFacing());
+    turnTo(playerTank.getTurretDirection());
   }
 }
 
@@ -261,7 +261,7 @@ public class Gunner extends Player {
   
   public void update() {
     super.update();
-    turnTo(vehicle.getTurretFacing());
+    turnTo(vehicle.getTurretDirection());
   }
 }
 

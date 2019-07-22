@@ -290,7 +290,7 @@ public class Sighting {
     this.x=t.getX();
     this.y=t.getY();
     this.facing=t.getFacing();
-    this.turretFacing=t.getTurretFacing();
+    this.turretFacing=t.getTurretDirection();
     this.team=t.getTeam();
   }
   

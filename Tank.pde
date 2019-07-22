@@ -85,13 +85,21 @@ class Tank extends Entity implements Hittable, Impactor {
     logger.log(this+" hit for: " + damage+ ", now at: "+health); 
   }
   
+  public float getTurretPivotX() {
+    return x+hull.turretOffset*cos(facing);
+  }
+  
+  public float getTurretPivotY() {
+    return y+hull.turretOffset*sin(facing);
+  }
+  
   public void render() {
     pushMatrix();
     translate(x,y);
     rotate(facing);
     shape(hull.render);
     translate(hull.turretOffset,0);
-    rotate(turretFacing-facing);
+    rotate(turretFacing);
     shape(turret.render);
     translate(turret.cannonOffset,0);
     shape(cannon.render);
@@ -104,7 +112,7 @@ class Tank extends Entity implements Hittable, Impactor {
     return !col.isEmpty();
   }
   public float getThickness(float angle) {
-    float incidence=(facing-angle)%TWO_PI;
+    float incidence=(facing-angle);
     return abs(hull.armor/sin(incidence));
   }
   
@@ -112,13 +120,13 @@ class Tank extends Entity implements Hittable, Impactor {
     return health;
   }
   
-  public float getTurretFacing() {
-   return turretFacing;
+  public float getTurretDirection() {
+   return turretFacing+facing;
   }
   
   public void fire() {
     if(reloadCounter==0) {
-      cannon.fire(x,y,turretFacing,team);
+      cannon.fire(x,y,getTurretDirection(),team);
       reloadCounter=cannon.reload;
     }
   }
@@ -131,7 +139,7 @@ class Tank extends Entity implements Hittable, Impactor {
   public void turn(float dir) {
     //println("traverse "+dir);
     turnBy(traverse*dir);
-    turnTurretBy(traverse*dir);
+    //turnTurretBy(traverse*dir);
   }
   
   public void aimTurret(float dir) {
@@ -175,7 +183,7 @@ class Tank extends Entity implements Hittable, Impactor {
     at.rotate(facing);
     Area collider = new Area(at.createTransformedShape(hull.collision));
     at.translate(hull.turretOffset,0);
-    at.rotate(turretFacing-facing);
+    at.rotate(turretFacing);
     collider.add(new Area(at.createTransformedShape(turret.collision)));
     return collider;
   }

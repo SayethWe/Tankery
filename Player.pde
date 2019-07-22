@@ -56,7 +56,7 @@ abstract class Player extends Entity {
 
   public void update() {
     if(vehicle.isDead()) this.markToRemove();
-    moveTo(vehicle);
+    //moveTo(vehicle);
     viewCoolDown--;
   }
 
@@ -108,12 +108,13 @@ public class TestPlayer extends Player {
       break;
       
       default:
-      throw new IllegalArgumentException("TestPlayer: Unimplemented Keybind");
+      throw new IllegalArgumentException("TestPlayer: Unimplemented Keybind: " + kb);
     }
   }
   
   public void update() {
     super.update();
+    moveTo(vehicle);
     turnTo(playerTank.getTurretDirection());
   }
 }
@@ -131,6 +132,7 @@ public class Commander extends Player {
   
   public void update() {
     super.update();
+    moveTo(vehicle.getTurretPivotX(),vehicle.getTurretPivotY());
     alertTimer--;
   }
   
@@ -172,7 +174,7 @@ public class Commander extends Player {
       break;
       
       default:
-      throw new IllegalArgumentException("Commander: Unimplemented Keybind");
+      throw new IllegalArgumentException("Commander: Unimplemented Keybind: " + kb);
     }
   }
 }
@@ -210,12 +212,13 @@ public class Driver extends Player {
       break;
       
       default:
-      throw new IllegalArgumentException("Driver: Unimplemented Keybind");
+      throw new IllegalArgumentException("Driver: Unimplemented Keybind: " + kb);
     }
   }
   
   public void update() {
     super.update();
+    moveTo(vehicle);
     turnTo(vehicle.getFacing());
   }
 }
@@ -255,12 +258,13 @@ public class Gunner extends Player {
       break;
       
       default:
-      throw new IllegalArgumentException("Gunner: Unimplemented Keybind");
+      throw new IllegalArgumentException("Gunner: Unimplemented Keybind: " + kb);
     }
   }
   
   public void update() {
     super.update();
+    moveTo(vehicle.getTurretPivotX(),vehicle.getTurretPivotY());
     turnTo(vehicle.getTurretDirection());
   }
 }

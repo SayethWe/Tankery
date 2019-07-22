@@ -59,7 +59,7 @@ public class Explosion extends Entity implements Impactor {
   
   public int impact(Hittable h) {
     println(this+" exploded on "+h);
-    h.damage(damage); //TODO: reduce with thickness, after proper angle incident calculation is applied
+    h.damage(int(damage/h.getThickness(0))); //TODO: reduce with thickness properly, after proper angle incident calculation is applied
     return damage;
   }
 }

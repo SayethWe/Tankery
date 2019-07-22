@@ -41,7 +41,7 @@ void setup() {
   noSmooth();
   
   //Create some tanks to play with
-  playerTank = new Tank(1);
+  playerTank = new Tank(Prebuild.FAST,1);
   new Tank(200,300,PI/3,PI/2,0);
   //new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
   //new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());

@@ -111,9 +111,12 @@ class Tank extends Entity implements Hittable, Impactor {
     col.intersect(collider);
     return !col.isEmpty();
   }
-  public float getThickness(float angle) {
+  public float getThicknessTowards(float angle) {
     float incidence=(facing-angle);
     return abs(hull.armor/sin(incidence));
+  }
+  public float getThickness() {
+    return hull.armor;
   }
   
   public int getHealth() {
@@ -190,7 +193,7 @@ class Tank extends Entity implements Hittable, Impactor {
     
   public int impact(Hittable h) {
     //println("tank collision");
-    float thickness=h.getThickness(facing);
+    float thickness=h.getThicknessTowards(facing);
     //println(thickness);
     int damage = int((hull.armor*2/thickness)*abs(velocity));
     //println(damage);

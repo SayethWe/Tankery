@@ -43,9 +43,10 @@ void setup() {
   //Create some tanks to play with
   playerTank = new Tank(Prebuild.FAST,1);
   new Tank(200,300,PI/3,PI/2,0);
-  //new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
+  new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
   //new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());
   //new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.LONG,Engine.WEAK,testBack());
+
 
   
   //initialize the test roles
@@ -64,7 +65,7 @@ void draw() {
   handleKeys();
   updateAll();
   handleCollisions();
-  handleFog(); //Must be penultimate call
+  //handleFog(); //Must be penultimate call
   drawUI(); //must be last call
 }
 
@@ -107,7 +108,8 @@ public void handleCollisions() {
 interface Hittable {
   public boolean contains(Area collider);
   public void damage(int damage);
-  public float getThickness(float incident);
+  public float getThicknessTowards(float incident);
+  public float getThickness(); //direction-independant thickness
   public byte getTeam();
 }
 

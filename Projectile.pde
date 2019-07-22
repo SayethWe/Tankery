@@ -55,7 +55,7 @@ class Projectile extends Entity implements Impactor{
   }
   
   public int impact(Hittable h) {
-    float thickness = h.getThickness(facing);
+    float thickness = h.getThicknessTowards(facing);
     if(thickness<penetration&&armed) {
       h.damage(damage);
       markToRemove();

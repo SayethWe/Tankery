@@ -62,7 +62,7 @@ class Projectile extends Entity implements Impactor{
       return damage;
     } else {
       //Todo: Bouncing
-      explosion(x,y,caliber*explosiveLoad,int(damage*explosiveLoad));
+      explosion(x,y,caliber*explosiveLoad,int(damage*explosiveLoad),team);
       markToRemove();
       return 0;
     }

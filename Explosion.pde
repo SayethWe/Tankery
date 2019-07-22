@@ -2,7 +2,7 @@ import java.awt.geom.Ellipse2D;
 
 public class Explosion extends Entity implements Impactor {
   private static final float GROWTH_RATE=0.7;
-  private static final float SHRINK_RATE=0.5;
+  private static final float SHRINK_RATE=0.25;
   private static final float TOLERANCE = 3.5;
   
   private final float size;
@@ -11,12 +11,15 @@ public class Explosion extends Entity implements Impactor {
   private float currentSize;
   private boolean growing;
   
-  public Explosion(float x, float y, float size, int damage) {
-    super(x,y,0,127);
+  //private final Shape collider;
+  
+  public Explosion(float x, float y, float size, int damage, int team) {
+    super(x,y,0,team);
     this.size=size;
     this.currentSize=0;
     this.growing=true;
     this.damage=damage;
+    //this.collider=new Ellipse2D.Float(x-size,y-size,size*2,size*2);
     println("explosion at "+x+","+y);
   }
   
@@ -51,10 +54,11 @@ public class Explosion extends Entity implements Impactor {
   }
   
   public Area getCollider() {
-    return new Area(new Ellipse2D.Float(x+size,y+size,currentSize*2,currentSize*2));
+    return new Area(new Ellipse2D.Float(x-size,y-size,currentSize*2,currentSize*2));
   }
   
   public int impact(Hittable h) {
+    println(this+" exploded on "+h);
     h.damage(damage); //TODO: reduce with thickness, after proper angle incident calculation is applied
     return damage;
   }

@@ -17,8 +17,8 @@ static void createProjectile(float x, float y, float direction, float penetratio
  instance.new QueuedProjectile(x,y,direction,penetration, shellVelocity,damage,caliber,explosiveLoad,team);
 }
 
-static void explosion(float x, float y, float size,float damage) {
-  instance.new QueuedExplosion(x,y,size,int(damage));
+static void explosion(float x, float y, float size,float damage,int team) {
+  instance.new QueuedExplosion(x,y,size,int(damage),team);
 }
 
 //avoid concurrent modification exceptions
@@ -33,7 +33,8 @@ public static void handleQueues() {
   }
   queue.clear();
   for(QueuedExplosion qe:explosionQueue) {
-    instance.new Explosion(qe.x,qe.y,qe.size,qe.damage);
+    //instance.new Explosion(qe.x,qe.y,qe.size,qe.damage,qe.team); //explosions can't do team damage.
+    instance.new Explosion(qe.x,qe.y,qe.size,qe.damage,127); //explosions can damage everyone.
   }
   explosionQueue.clear();
 }
@@ -59,13 +60,14 @@ class QueuedProjectile {
 
 class QueuedExplosion {
   public final float x,y,size;
-  public final int damage;
+  public final int damage, team;
   
-  public QueuedExplosion(float x, float y, float size, int damage) {
+  public QueuedExplosion(float x, float y, float size, int damage, int team) {
     this.x=x;
     this.y=y;
     this.size=size;
     this.damage=damage;
+    this.team=team;
     explosionQueue.add(this);
   }
 }

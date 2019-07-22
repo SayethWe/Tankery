@@ -100,9 +100,9 @@ enum Turret implements Collideable, Renderable{
 
 //The shooty-bit. Responsible for most of the offensive capabilities.
 enum Cannon implements Renderable {
-    TEST(50,75,10,6,2.5,PI/25,PI/20,3.5,new float[]{0,30,30,0},new float[]{-2,-2,2,2},4,#CD3F66,#000000),
-    SHORT(20,100,30,3,1.5,PI/20,PI/10,4.3,new float[]{0,15,17,17,15,0},new float[]{-2.5,-2.5,-4,4,2.5,2.5}, 6, #5F4C22, #2E2309),
-    LONG(150,1000,300,15,2.3,PI/100,PI/50,3.2,new float[]{0,45,40,50,50,40,45,0},new float[]{-1,-1,-2,-1,1,2,1,1},8, #711919, #A7630F);
+    TEST(50,75,10,6,2.5,PI/25,PI/20,3.5,3,new float[]{0,30,30,0},new float[]{-2,-2,2,2},4,#CD3F66,#000000),
+    SHORT(20,100,30,3,1.5,PI/20,PI/10,4.3,20,new float[]{0,15,17,17,15,0},new float[]{-2.5,-2.5,-4,4,2.5,2.5}, 6, #5F4C22, #2E2309),
+    LONG(150,1000,300,15,2.3,PI/100,PI/50,3.2,0,new float[]{0,45,40,50,50,40,45,0},new float[]{-1,-1,-2,-1,1,2,1,1},8, #711919, #A7630F);
   
     private final int damage;
     private final float penetration;
@@ -112,9 +112,10 @@ enum Cannon implements Renderable {
     public final float dispersion;
     public final float maxDispersion;
     private final float caliber;
+    private final float explosiveLoad;
     private final PShape render;
     
-    private Cannon(int damage, int penetration, int reload, float shellVelocity, float mass, float dispersion, float maxDispersion, float caliber, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
+    private Cannon(int damage, int penetration, int reload, float shellVelocity, float mass, float dispersion, float maxDispersion, float caliber, float explosiveLoad, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
       this.damage=damage;
       this.penetration=penetration;
       this.reload=reload;
@@ -123,6 +124,7 @@ enum Cannon implements Renderable {
       this.dispersion=dispersion;
       this.maxDispersion=maxDispersion;
       this.caliber=caliber;
+      this.explosiveLoad=explosiveLoad;
       this.render=PartBuilder.createRender(xPoints,yPoints,points,fill,stroke);
     }
     
@@ -132,7 +134,7 @@ enum Cannon implements Renderable {
     
     public void fire(float x, float y, float facing, int team) {
         float direction=clampedGaussian(facing,dispersion,facing-maxDispersion,facing+maxDispersion);
-        createProjectile(x,y,direction,penetration,shellVelocity,damage,caliber,team);
+        createProjectile(x,y,direction,penetration,shellVelocity,damage,caliber,explosiveLoad,team);
     }
 }
 

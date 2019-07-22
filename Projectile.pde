@@ -14,16 +14,18 @@ class Projectile extends Entity implements Impactor{
   final float meanDamage;
   final int damage;
   final float caliber;
+  final float explosiveLoad;
   byte age = 0;
   private boolean armed=false;
   
-  public Projectile(float x, float y, float angle, float penetration, float velocity,float damage,float caliber,int team) {
+  public Projectile(float x, float y, float angle, float penetration, float velocity,float damage,float caliber,float explosiveLoad,int team) {
     super(x,y,angle,team);
     this.penetration=penetration;
     this.velocity=velocity;
     this.meanDamage=damage;
     this.damage=genDamage(damage);
     this.caliber=caliber;
+    this.explosiveLoad=explosiveLoad;
     frameCollider = new Rectangle(int(-caliber),int(-caliber/2),int(velocity+2*caliber),int(caliber));
   }
   
@@ -60,6 +62,7 @@ class Projectile extends Entity implements Impactor{
       return damage;
     } else {
       //Todo: Bouncing
+      explosion(x,y,caliber*explosiveLoad,int(damage*explosiveLoad));
       markToRemove();
       return 0;
     }

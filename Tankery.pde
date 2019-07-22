@@ -28,6 +28,7 @@ public static final Set<AbstractAI>robots=new HashSet<AbstractAI>();
 //Things that should be removed from the trackers
 Set<Entity>toRemove=new HashSet<Entity>();
 
+
 Logger logger;
 
 void setup() {
@@ -42,9 +43,9 @@ void setup() {
   //Create some tanks to play with
   playerTank = new Tank(1);
   new Tank(200,300,PI/3,PI/2,0);
-  new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
-  new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());
-  new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.LONG,Engine.WEAK,testBack());
+  //new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
+  //new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());
+  //new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.LONG,Engine.WEAK,testBack());
 
   
   //initialize the test roles
@@ -76,7 +77,7 @@ void dispose() {
 
 //go through everything we track, and update then draw them
 public void updateAll() {
-  createProjectiles();
+  handleQueues();
   for (Entity e:entities){
     e.update();
     e.render();
@@ -110,10 +111,10 @@ interface Hittable {
   public byte getTeam();
 }
 
-//something that can hit anotehr thing
+//something that can hit another thing
 interface Impactor {
   public int impact(Hittable h); //returns how much damage it did
-  public float getFacing();
+  //public float getFacing();
   public Area getCollider();
   public byte getTeam();
 }

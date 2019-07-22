@@ -13,29 +13,37 @@ public static float clampedGaussian(float mean, float variance, float min, float
 }
 
 //load a new projectile in
-static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber, int team) {
- instance.new QueuedProjectile(x,y,direction,penetration, shellVelocity,damage,caliber,team);
+static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber,float explosiveLoad, int team) {
+ instance.new QueuedProjectile(x,y,direction,penetration, shellVelocity,damage,caliber,explosiveLoad,team);
+}
+
+static void explosion(float x, float y, float size,float damage) {
+  instance.new QueuedExplosion(x,y,size,int(damage));
 }
 
 //avoid concurrent modification exceptions
 static Set<QueuedProjectile> queue = new HashSet<QueuedProjectile>();
+static Set<QueuedExplosion> explosionQueue = new HashSet<QueuedExplosion>();
 
 
   
-public static void createProjectiles() {
+public static void handleQueues() {
   for(QueuedProjectile qp:queue) {
-    instance.new Projectile(qp.x,qp.y,qp.direction,qp.penetration,qp.velocity,qp.damage,qp.caliber,qp.team);
+    instance.new Projectile(qp.x,qp.y,qp.direction,qp.penetration,qp.velocity,qp.damage,qp.caliber,qp.load,qp.team);
   }
   queue.clear();
+  for(QueuedExplosion qe:explosionQueue) {
+    instance.new Explosion(qe.x,qe.y,qe.size,qe.damage);
+  }
+  explosionQueue.clear();
 }
 
-class QueuedProjectile {
+class QueuedProjectile { 
   
-  
-  public final float x,y,direction,penetration,velocity,caliber;
+  public final float x,y,direction,penetration,velocity,caliber,load;
   public final int damage,team;
   
-  public QueuedProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber, int team) {
+  public QueuedProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber, float load, int team) {
     this.x=x;
     this.y=y;
     this.direction=direction;
@@ -44,7 +52,21 @@ class QueuedProjectile {
     this.damage=damage;
     this.caliber=caliber;
     this.team=team;
+    this.load=load;
     queue.add(this);
+  }
+}
+
+class QueuedExplosion {
+  public final float x,y,size;
+  public final int damage;
+  
+  public QueuedExplosion(float x, float y, float size, int damage) {
+    this.x=x;
+    this.y=y;
+    this.size=size;
+    this.damage=damage;
+    explosionQueue.add(this);
   }
 }
 

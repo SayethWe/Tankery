@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public abstract class AbstractAI extends Tank {
   
-  //when to discard sightings. unsued
+  //when to discard sightings. unused
   private static final long AGE_DISCARD = 10000;
   private static final int SIGHTINGS_STORAGE = 5;
   
@@ -83,12 +83,13 @@ public class PatrolAI extends AbstractAI {
   private final float ANGLE_TURN = PI/4;
   private final float ANGLE_DRIVE = PI/8;
   
-  private final float DIST_SLOW = 50*50;
+  private final float DIST_SLOW = 70*70;
+  private final float DIST_BRAKE = 20*20;
   
-  private final Route route;
+  protected final Route route;
   
-  private Node targetNode;
-  private int delay=0;
+  protected Node targetNode;
+  protected int delay=0;
   
   public PatrolAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Route route) {
     super(x,y,facing,turretFacing,viewDist,spotPercent,team);
@@ -144,7 +145,13 @@ public class PatrolAI extends AbstractAI {
           turn(-0.5);
         }
         if (abs(angleDel) < ANGLE_DRIVE) {
-          drive(1);
+          if(dist>DIST_SLOW) {
+            drive(1);
+          } else if (dist>DIST_BRAKE) {
+            drive(0.5);
+          } else {
+            brake();
+          }
         }
       }
     } else {
@@ -177,6 +184,80 @@ public class PatrolAI extends AbstractAI {
     }
   }
   
+}
+
+public class PIDAI extends PatrolAI {
+  private final float kpt, kit, kdt; //theta gains
+  private final float kps, kis, kds; //position gains
+  
+  private float lastThetaErr, sumThetaErr;
+  private float lastPosErr, sumPosErr;
+  
+  public PIDAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Route route, float[] gains) {
+    super(x,y,facing,turretFacing,viewDist,spotPercent,team,route);
+    if(gains.length!=6) throw new IllegalArgumentException("Improper gains");
+    this.kps=gains[0];
+    this.kis=gains[1];
+    this.kds=gains[2];
+    this.kpt=gains[3];
+    this.kit=gains[4];
+    this.kdt=gains[5];
+  }
+  
+  public PIDAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, Prebuild build, int team, Route route, float[] gains) {
+    super(x,y,facing,turretFacing,viewDist,spotPercent,build,team,route);
+    if(gains.length!=6) throw new IllegalArgumentException("Improper gains");
+    this.kps=gains[0];
+    this.kis=gains[1];
+    this.kds=gains[2];
+    this.kpt=gains[3];
+    this.kit=gains[4];
+    this.kdt=gains[5];
+  }
+  
+  public PIDAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route, float[] gains) {
+    super(x,y,facing,turretFacing,viewDist,spotPercent,team,hull,turret,cannon,engine,route);
+    if(gains.length!=6) throw new IllegalArgumentException("Improper gains");
+    this.kps=gains[0];
+    this.kis=gains[1];
+    this.kds=gains[2];
+    this.kpt=gains[3];
+    this.kit=gains[4];
+    this.kdt=gains[5];
+  }
+  
+  protected void doMovement() {
+    if(delay<0) {
+      float targetAngle=atan2(targetNode.y-y,targetNode.x-x);
+      float thetaErr=angleBetween(facing,targetAngle);
+      float delThetaErr = lastThetaErr-thetaErr;
+      sumThetaErr += thetaErr;
+      float thetaAction = constrain(kpt*thetaErr+kit*sumThetaErr+kdt*delThetaErr,-1,1);
+      
+      
+      float posErr = findSquareDist(x,y,targetNode.x,targetNode.y)-targetNode.tolerance;
+      float delPosErr = lastPosErr-posErr;
+      sumPosErr += posErr;
+      float posAction=constrain(kps*posErr+kis*sumPosErr+kds*delPosErr,-0.5,1);
+      
+      println(this+"Action: turn By:"+thetaAction+", Drive by:"+posAction);
+      turn(thetaAction);
+      drive(posAction);
+      
+      if(posErr<targetNode.tolerance) {
+        delay=targetNode.delay;
+        targetNode=route.next();
+      }
+    } else {
+      delay--;
+    }
+      
+      
+  }
+  
+  public String toString() {
+    return "PID-Tuned AI "+kpt+","+kit+","+kdt+"|"+kps+","+kis+","+kds;
+  }
 }
 
 //A route for a patrol tank to follow

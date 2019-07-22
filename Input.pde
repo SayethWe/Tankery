@@ -5,6 +5,8 @@ import java.util.stream.*;
 //keys that are currently being held
 Map<Keybind,Boolean>keys=new EnumMap<Keybind,Boolean>(Keybind.class);
 
+static boolean paused=false;
+
 void keyPressed() {
   if(key!=CODED){
     keys.put(keybinds.getOrDefault(Character.toLowerCase(key),Keybind.UNKNOWN),true);
@@ -26,6 +28,10 @@ void keyPressed() {
       break;
       case '\\':
       screenshot();
+      break;
+      case 'p':
+      if(paused) {loop();}else{noLoop();}
+      paused=!paused;
       break;
       case '=':
       stop();
@@ -53,6 +59,7 @@ enum Keybind {
   LEFT(),
   RIGHT(),
   ACTION(),
+  AUXILIARY(),
   SLOW_LEFT(),
   SLOW_RIGHT(),
   UNKNOWN();
@@ -67,6 +74,7 @@ Map<Character,Keybind> dvorakLayout() {
   result.put('o',Keybind.BACK);
   result.put('e',Keybind.RIGHT);
   result.put(' ',Keybind.ACTION);
+  result.put('x',Keybind.AUXILIARY);
   return result;
 }
 
@@ -79,5 +87,6 @@ Map<Character,Keybind> qwertyLayout() {
   result.put('s',Keybind.BACK);
   result.put('d',Keybind.RIGHT);
   result.put(' ',Keybind.ACTION);
+  result.put('x',Keybind.AUXILIARY);
   return result;
 }

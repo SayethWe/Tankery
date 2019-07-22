@@ -100,9 +100,11 @@ public class TestPlayer extends Player {
       vehicle.fire();
       break;
       
-      case UNKNOWN:
-      //baaaad implementation
+      case AUXILIARY:
       vehicle.brake();
+      break;
+      
+      case UNKNOWN:
       break;
       
       default:

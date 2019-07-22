@@ -51,6 +51,7 @@ abstract class Player extends Entity {
     stroke(255, 50, 70);
     float viewLength = viewFields[selectedView].getViewDistance();
     line(x, y, x+cos(facing)*viewLength, y+sin(facing)*viewLength);
+    //if(this.equals(testPlayer)) viewFields[selectedView].render(x,y,facing);
   }
 
   public void update() {
@@ -288,6 +289,22 @@ public class ViewField {
     float seperation = angleBetween(facing,angle);
     return (abs(seperation)<=viewArc);
   }
+  
+  //public void render(float x, float y, float facing) {
+  //  fill(128);
+  //  noStroke();
+  //  beginShape();
+  //  vertex(x,y);
+  //  vertex(x+viewDistance*cos(facing+viewAngle/2),y+viewDistance*sin(facing+viewAngle/2));
+  //  float angle = floor(facing/PI/2)*PI/2+PI/4;
+  //  float dist=sqrt(2)*viewDistance;
+  //  for(int i = 0; i<4;i++) {
+  //    float dir = i*PI/2+angle;
+  //    vertex(x+dist*cos(dir),y+dist*sin(dir));
+  //  }
+  //  vertex(x+viewDistance*cos(facing-viewAngle/2),y+viewDistance*sin(facing-viewAngle/2));
+  //  endShape(CLOSE);
+  //}
   
   public float getViewDistance() {
     return viewDistance;

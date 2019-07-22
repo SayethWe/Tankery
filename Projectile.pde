@@ -1,4 +1,4 @@
-import java.awt.geom.Ellipse2D;
+import java.awt.Rectangle;
 
 //a flying thing that can do damage
 class Projectile extends Entity implements Impactor{
@@ -6,6 +6,8 @@ class Projectile extends Entity implements Impactor{
   private static final float DAMAGE_VARIANCE = 0.1;
   private static final float MAX_DAMAGE_VARIANCE = 0.3;
   private static final int FUSE = 6;
+  
+  private final Shape frameCollider;
   
   float penetration;
   float velocity;
@@ -22,6 +24,7 @@ class Projectile extends Entity implements Impactor{
     this.meanDamage=damage;
     this.damage=genDamage(damage);
     this.caliber=caliber;
+    frameCollider = new Rectangle(int(-caliber),int(-caliber/2),int(velocity+2*caliber),int(caliber));
   }
   
   protected void addToTrackers() {
@@ -32,6 +35,9 @@ class Projectile extends Entity implements Impactor{
   public void update() {
     float newX=x+velocity*cos(facing);
     float newY=y+velocity*sin(facing);
+    stroke(255,0,255);
+    rectMode(CORNERS);
+    line(x,y,newX,newY);
     moveTo(newX,newY);
     
     age++;
@@ -60,7 +66,10 @@ class Projectile extends Entity implements Impactor{
   }
   
   public Area getCollider() {
-    return new Area(new Ellipse2D.Float(x,y,caliber,caliber));
+    AffineTransform at = new AffineTransform();
+    at.translate(x,y);
+    at.rotate(facing);
+    return new Area(at.createTransformedShape(frameCollider));
   }
   
   private void arm() {

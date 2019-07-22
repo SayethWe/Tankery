@@ -44,7 +44,7 @@ void setup() {
   new Tank(200,300,PI/3,PI/2,0);
   new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
   new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());
-  new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.TEST,Engine.WEAK,testBack());
+  new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.LONG,Engine.WEAK,testBack());
 
   
   //initialize the test roles

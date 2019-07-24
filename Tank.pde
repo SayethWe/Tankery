@@ -56,7 +56,7 @@ class Tank extends Entity implements Hittable, Impactor {
     this.cannon=cannon;
     this.engine=engine;
     this.machineGun=bowGun;
-    this.mass = hull.mass+turret.mass+cannon.mass+engine.mass;
+    this.mass = hull.mass+turret.mass+cannon.mass+engine.mass+bowGun.mass;
     this.maxHealth=hull.maxHealth+turret.maxHealth;
     this.health=this.maxHealth;
     this.acceleration=engine.power/(mass+hull.groundResistance);

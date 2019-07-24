@@ -7,6 +7,8 @@ class Tank extends Entity implements Hittable, Impactor {
   private final Turret turret;
   private final Cannon cannon;
   private final Engine engine;
+  private final MachineGun machineGun;
+  
   private final float mass;
   public final int maxHealth;
   private final float traverse;
@@ -17,11 +19,11 @@ class Tank extends Entity implements Hittable, Impactor {
   protected float turretFacing;
   private float velocity;
   private int health;
-  private int reloadCounter;
+  private int reloadCounter, machineReloadCounter;
   private boolean isDead=false;
   
   public Tank(int team) {
-    this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,team);
+    this(width/2,height/2,0,0,Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,MachineGun.TEST,team);
   }
   
 
@@ -30,11 +32,11 @@ class Tank extends Entity implements Hittable, Impactor {
   }
   
   public Tank(float x, float y, float facing, float turretFacing, int team) {
-    this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,team);
+    this(x,y,facing,turretFacing, Hull.TEST, Turret.TEST, Cannon.TEST, Engine.TEST,MachineGun.TEST,team);
   }
 
   public Tank(float x, float y, float facing, float turretFacing, Prebuild build, int team) {
-    this(x,y,facing,turretFacing,build.hull,build.turret,build.cannon,build.engine,team);
+    this(x,y,facing,turretFacing,build.hull,build.turret,build.cannon,build.engine,build.machineGun,team);
   }
   
   //public Tank(float x, float y, float facing, float turretFacing, Random random, int team) {
@@ -46,13 +48,14 @@ class Tank extends Entity implements Hittable, Impactor {
   //  ,team);
   //}
   
-  public Tank(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine, int team) {
+  public Tank(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine, MachineGun bowGun, int team) {
     super(x,y,facing,team);
     this.hull=hull;
     this.turret=turret;
     this.turretFacing=turretFacing;
     this.cannon=cannon;
     this.engine=engine;
+    this.machineGun=bowGun;
     this.mass = hull.mass+turret.mass+cannon.mass+engine.mass;
     this.maxHealth=hull.maxHealth+turret.maxHealth;
     this.health=this.maxHealth;
@@ -127,10 +130,15 @@ class Tank extends Entity implements Hittable, Impactor {
    return turretFacing+facing;
   }
   
-  public void fire() {
-    if(reloadCounter==0) {
-      cannon.fire(x,y,getTurretDirection(),team);
-      reloadCounter=cannon.reload;
+  public void fireMain() {
+    if(reloadCounter<=0) {
+      reloadCounter=cannon.fire(x,y,getTurretDirection(),team);
+    }
+  }
+  
+  public void fireMachine() {
+    if(machineReloadCounter<=0) {
+      machineReloadCounter=machineGun.fire(x,y,facing,team);
     }
   }
   
@@ -175,8 +183,9 @@ class Tank extends Entity implements Hittable, Impactor {
   public void reloadStep(boolean wasLoader) {
     if(wasLoader) {
       reloadCounter=0;
-    } else if (reloadCounter>0) {
+    } else {
       reloadCounter--;
+      machineReloadCounter--;
     }
   }
     

@@ -26,8 +26,8 @@ public abstract class AbstractAI extends Tank {
     memory=new HashMap<Tank,List<Sighting>>();
   }
   
-  public AbstractAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine) {
-    super(x,y,facing,turretFacing,hull,turret,cannon,engine,team);
+  public AbstractAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, MachineGun mg) {
+    super(x,y,facing,turretFacing,hull,turret,cannon,engine,mg,team);
     this.viewDist=viewDist*viewDist;
     this.spotPercent=spotPercent;
     memory=new HashMap<Tank,List<Sighting>>();
@@ -103,8 +103,8 @@ public class PatrolAI extends AbstractAI {
     targetNode = route.first();
   }
   
-  public PatrolAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route) {
-    super(x,y,facing,turretFacing,viewDist,spotPercent,team,hull,turret,cannon,engine);
+  public PatrolAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, MachineGun mg, Route route) {
+    super(x,y,facing,turretFacing,viewDist,spotPercent,team,hull,turret,cannon,engine,mg);
     this.route=route;
     //target = route.first();
     targetNode=route.near(x,y);
@@ -171,7 +171,7 @@ public class PatrolAI extends AbstractAI {
       } else if (angleDel>ANGLE_EPSILON) {
         aimTurret(-0.5);
       } else {
-        fire();
+        fireMain();
       }
     }
   }
@@ -215,8 +215,8 @@ public class PIDAI extends PatrolAI {
     this.kdt=gains[5];
   }
   
-  public PIDAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, Route route, float[] gains) {
-    super(x,y,facing,turretFacing,viewDist,spotPercent,team,hull,turret,cannon,engine,route);
+  public PIDAI(float x, float y, float facing, float turretFacing, float viewDist, float spotPercent, int team, Hull hull, Turret turret, Cannon cannon, Engine engine, MachineGun mg, Route route, float[] gains) {
+    super(x,y,facing,turretFacing,viewDist,spotPercent,team,hull,turret,cannon,engine,mg,route);
     if(gains.length!=6) throw new IllegalArgumentException("Improper gains");
     this.kps=gains[0];
     this.kis=gains[1];

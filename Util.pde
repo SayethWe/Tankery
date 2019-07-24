@@ -13,7 +13,7 @@ public static float clampedGaussian(float mean, float variance, float min, float
 }
 
 //load a new projectile in
-static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber,float explosiveLoad, int team) {
+static void createProjectile(float x, float y, float direction, float penetration, float shellVelocity, int damage, float caliber, float explosiveLoad, int team) {
  instance.new QueuedProjectile(x,y,direction,penetration, shellVelocity,damage,caliber,explosiveLoad,team);
 }
 

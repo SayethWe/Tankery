@@ -97,7 +97,8 @@ public class TestPlayer extends Player {
       break;
       
       case ACTION:
-      vehicle.fire();
+      vehicle.fireMain();
+      vehicle.fireMachine();
       break;
       
       case AUXILIARY:
@@ -125,6 +126,7 @@ public class Commander extends Player {
   //private static final int ALERT_COOLDOWN = 50;
   
   private int alertTimer;
+  private int artilleryTimer;
   
   public Commander(Tank vehicle) {
     super(vehicle, new ViewField(3*PI/4, 120,2),new ViewField(3*PI/7,200,3),new ViewField(PI/6,300,5));
@@ -170,6 +172,12 @@ public class Commander extends Player {
       alert();
       break;
       
+      case AUXILIARY:
+      if(isInView(mouseX,mouseY)) {
+        //artillery
+      }
+      break;
+      
       case UNKNOWN:
       break;
       
@@ -209,6 +217,10 @@ public class Driver extends Player {
       case ACTION:
       vehicle.brake();
       case UNKNOWN:
+      break;
+      
+      case AUXILIARY:
+      vehicle.fireMachine();
       break;
       
       default:
@@ -251,7 +263,11 @@ public class Gunner extends Player {
       break;
       
       case ACTION:
-      vehicle.fire();
+      vehicle.fireMain();
+      break;
+      
+      case AUXILIARY:
+      //undecided
       break;
       
       case UNKNOWN:

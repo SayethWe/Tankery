@@ -132,9 +132,10 @@ enum Cannon implements Renderable {
       return render;
     }
     
-    public void fire(float x, float y, float facing, int team) {
+    public int fire(float x, float y, float facing, int team) {
         float direction=clampedGaussian(facing,dispersion,facing-maxDispersion,facing+maxDispersion);
         createProjectile(x,y,direction,penetration,shellVelocity,damage,caliber,explosiveLoad,team);
+        return reload;
     }
 }
 
@@ -160,18 +161,49 @@ enum Engine {
 }
 
 enum Prebuild {
-  TEST(Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST),
-  FAST(Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.FAST);
+  TEST(Hull.TEST,Turret.TEST,Cannon.TEST,Engine.TEST,MachineGun.TEST),
+  FAST(Hull.LIGHT,Turret.SMALL,Cannon.SHORT,Engine.FAST,MachineGun.NONE);
   
   public final Hull hull;
   public final Turret turret;
   public final Cannon cannon;
   public final Engine engine;
+  public final MachineGun machineGun;
   
-  private Prebuild(Hull h, Turret t, Cannon c, Engine e) {
+  private Prebuild(Hull h, Turret t, Cannon c, Engine e, MachineGun mg) {
     this.hull=h;
     this.turret=t;
     this.cannon=c;
     this.engine=e;
+    this.machineGun = mg;
   }
+}
+
+enum MachineGun {
+  TEST(10,5,3,3,0.25,PI/10,PI/6,1),
+  NONE(0,0,0,0,0,0,0,0);
+  
+  public final float dispersion, maxDispersion;
+  public final float caliber, shellVelocity;
+  public final float mass;
+  public final int reload;
+  public final int damage, penetration;
+  
+  private MachineGun(int damage, int penetration, int reload, float shellVelocity, float mass, float dispersion, float maxDispersion, float caliber) {
+    this.damage=damage;
+    this.penetration=penetration;
+    this.reload=reload;
+    this.shellVelocity=shellVelocity;
+    this.mass=mass;
+    this.dispersion=dispersion;
+    this.maxDispersion=maxDispersion;
+    this.caliber=caliber;
+  }
+  
+  public int fire(float x, float y, float facing, int team) {
+    float direction=clampedGaussian(facing,dispersion,facing-maxDispersion,facing+maxDispersion);
+    createProjectile(x,y,direction,penetration,shellVelocity,damage,caliber,0,team);
+    return reload;
+  }
+  
 }

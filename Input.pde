@@ -36,6 +36,7 @@ void keyPressed() {
       case '=':
       stop();
       exit();
+      break;
     }
   }
 }

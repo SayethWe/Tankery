@@ -136,6 +136,7 @@ public class Commander extends Player {
     super.update();
     moveTo(vehicle.getTurretPivotX(),vehicle.getTurretPivotY());
     alertTimer--;
+    artilleryTimer--;
   }
   
   private void alert() {
@@ -173,8 +174,9 @@ public class Commander extends Player {
       break;
       
       case AUXILIARY:
-      if(isInView(mouseX,mouseY)) {
-        //artillery
+      if(artilleryTimer<=0&&isInView(mouseX,mouseY)) {
+        explosion(mouseX,mouseY,5,100,team);
+       artilleryTimer=10; 
       }
       break;
       

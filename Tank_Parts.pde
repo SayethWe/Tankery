@@ -172,6 +172,7 @@ enum Engine {
     this.maxSpeed=maxSpeed;
     this.maxReverseSpeed = maxReverse;
     this.traversePower=traversePower;
+    this.compatibility = compatibility;
     this.mass=mass;
   }
 }
@@ -196,8 +197,8 @@ enum Prebuild {
 }
 
 enum MachineGun {
-  TEST(10,5,3,3,PI/10,PI/6,1,0.25),
-  NONE(0,0,0,0,0,0,0,0);
+  TEST(PartBuilder.compatibilitySet(1), 10,5,3,3,PI/10,PI/6,1,0.25),
+  NONE(PartBuilder.compatibilitySet(1,2),0,0,0,0,0,0,0,0);
   
   public final float dispersion, maxDispersion;
   public final float caliber, shellVelocity;
@@ -205,15 +206,18 @@ enum MachineGun {
   public final int reload;
   public final int damage, penetration;
   
-  private MachineGun(int damage, int penetration, int reload, float shellVelocity, float dispersion, float maxDispersion, float caliber, float mass) {
+  public final Set<Integer> compatibility;
+  
+  private MachineGun(Set<Integer> compatibility, int damage, int penetration, int reload, float shellVelocity, float dispersion, float maxDispersion, float caliber, float mass) {
     this.damage=damage;
     this.penetration=penetration;
     this.reload=reload;
     this.shellVelocity=shellVelocity;
-    this.mass=mass;
     this.dispersion=dispersion;
     this.maxDispersion=maxDispersion;
     this.caliber=caliber;
+    this.compatibility=compatibility;
+    this.mass=mass;
   }
   
   public int fire(float x, float y, float facing, int team) {

@@ -50,12 +50,20 @@ class Tank extends Entity implements Hittable, Impactor {
   
   public Tank(float x, float y, float facing, float turretFacing, Hull hull, Turret turret, Cannon cannon, Engine engine, MachineGun bowGun, int team) {
     super(x,y,facing,team);
-    this.hull=hull;
-    this.turret=turret;
     this.turretFacing=turretFacing;
+    
+    this.hull=hull;
+    Set<Integer> compatibilityCheck=hull.compatibility;
+    this.turret=turret;
+    compatibilityCheck.retainAll(turret.compatibility);
     this.cannon=cannon;
+    compatibilityCheck.retainAll(cannon.compatibility);
     this.engine=engine;
+    compatibilityCheck.retainAll(engine.compatibility);
     this.machineGun=bowGun;
+    compatibilityCheck.retainAll(machineGun.compatibility);
+    if(compatibilityCheck.isEmpty()) throw new IllegalArgumentException("Incompatible Parts");
+    
     this.mass = hull.mass+turret.mass+cannon.mass+engine.mass+bowGun.mass;
     this.maxHealth=hull.maxHealth+turret.maxHealth;
     this.health=this.maxHealth;

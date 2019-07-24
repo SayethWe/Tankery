@@ -161,7 +161,7 @@ public class PatrolAI extends AbstractAI {
     
     if(target!=null) {
       Sighting mostRecent = memory.get(target).get(memory.get(target).size()-1);
-      float angleDel=angleBetween(turretFacing,atan2(mostRecent.y-y,mostRecent.x-x));
+      float angleDel=angleBetween(getTurretDirection(),atan2(mostRecent.y-y,mostRecent.x-x));
       if (angleDel < -ANGLE_TURN) {
         aimTurret(1);
       } else if (angleDel>ANGLE_TURN) {

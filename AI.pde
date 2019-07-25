@@ -1,6 +1,9 @@
 import java.util.List;
 import java.util.LinkedList;
 
+interface Intelligent {
+  public void doMovement();
+}
 
 public abstract class AbstractAI extends Tank {
   
@@ -43,7 +46,7 @@ public abstract class AbstractAI extends Tank {
   }
   
   public void spotted(Tank t) {
-    println(this+" Spotted "+t);
+    //println(this+" Spotted "+t);
     memory.putIfAbsent(t,new LinkedList<Sighting>());
     List sightings = memory.get(t);
     sightings.add(new Sighting(t));
@@ -240,7 +243,7 @@ public class PIDAI extends PatrolAI {
       sumPosErr += posErr;
       float posAction=constrain(kps*posErr+kis*sumPosErr+kds*delPosErr,-0.5,1);
       
-      println(this+"Action: turn By:"+thetaAction+", Drive by:"+posAction);
+      //println(this+" Action: turn By:"+thetaAction+", Drive by:"+posAction);
       turn(thetaAction);
       drive(posAction);
       

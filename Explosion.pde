@@ -20,7 +20,7 @@ public class Explosion extends Entity implements Impactor {
     this.growing=true;
     this.damage=damage;
     //this.collider=new Ellipse2D.Float(x-size,y-size,size*2,size*2);
-    println("explosion at "+x+","+y);
+    //println("explosion at "+x+","+y);
   }
   
   public void addToTrackers() {
@@ -58,7 +58,7 @@ public class Explosion extends Entity implements Impactor {
   }
   
   public int impact(Hittable h) {
-    println(this+" exploded on "+h);
+    //println(this+" exploded on "+h);
     h.damage(int(damage/h.getThickness())); //TODO: reduce with thickness properly, after proper angle incident calculation is applied
     return damage;
   }

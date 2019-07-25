@@ -47,6 +47,7 @@ void setup() {
   //new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());
   new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.LONG,Engine.WEAK,MachineGun.NONE,testBack());
   new PIDAI(650,300,PI,3*PI/5,50,52.5,Prebuild.FAST,0,testRoute(),new float[]{2,0,0,-1,0,0});
+  new Infantry(700,50,0,0);
 
   
   //initialize the test roles

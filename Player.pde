@@ -174,6 +174,7 @@ public class Commander extends Player {
       break;
       
       case AUXILIARY:
+      //TODO
       if(artilleryTimer<=0&&isInView(mouseX,mouseY)) {
         explosion(mouseX,mouseY,5,100,team);
        artilleryTimer=10; 

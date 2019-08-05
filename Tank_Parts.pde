@@ -16,6 +16,14 @@ static class PartBuilder {
     if(!(xPoints.length==points&&yPoints.length==points)) throw new IllegalArgumentException();
     return new Polygon(int(xPoints),int(yPoints),points);
   }
+  public static List<LineSegment> createEdges(float[] xPoints, float[] yPoints, int points) {
+    if(!(xPoints.length==points&&yPoints.length==points)) throw new IllegalArgumentException();
+    List<LineSegment> result = new ArrayList<LineSegment>(points);
+    for(int i = 0; i<points; i++) {
+      result.add(instance.new LineSegment(xPoints[i],yPoints[i],xPoints[(i+1)%points],yPoints[(i+1)%points]));
+    }
+    return result;
+  }
   public static  PShape createRender(float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
     if(!(xPoints.length==points&&yPoints.length==points)) throw new IllegalArgumentException();
     PShape render = instance.createShape();
@@ -40,7 +48,7 @@ static class PartBuilder {
 }
 
 //the main body. responsible for armor, part of the health, and movement resistance.
-enum Hull implements Collideable, Renderable{
+enum Hull implements Collideable, Renderable, Opaque{
   
   TEST(PartBuilder.compatibilitySet(1), 70,70,2.5,0,20.0,new float[]{-25, 25,30,25,-25},new float[]{-15,-15, 0,15, 15},5,#80EE54,#80EE54),
   LIGHT(PartBuilder.compatibilitySet(2), 30,25,1.0,-5,10.0,new float[]{25,15,-15,-20,-15,15},new float[]{0,10,10,0,-10,-10},6,#F50F0F,#F5AC0F);
@@ -54,6 +62,7 @@ enum Hull implements Collideable, Renderable{
   
   //TODO: collision polygon
   private final Shape collision;
+  private final List<LineSegment> edges;
   protected final PShape render;
   
   private Hull(Set<Integer> compatibility, int maxHealth, float armor, float groundResistance, float turretPivot, float mass, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
@@ -64,11 +73,15 @@ enum Hull implements Collideable, Renderable{
     this.groundResistance=groundResistance;
     this.turretOffset=turretPivot;
     this.collision = PartBuilder.createCollision(xPoints,yPoints,points);
+    this.edges = PartBuilder.createEdges(xPoints,yPoints,points);
     this.render = PartBuilder.createRender(xPoints,yPoints,points,fill,stroke);
   }
   
   public Shape getCollider() {
     return collision;
+  }
+  public List<LineSegment> getEdges() {
+    return edges;
   }
   public PShape getRender() {
     return render;
@@ -76,7 +89,7 @@ enum Hull implements Collideable, Renderable{
 }
  
 //the bit which the cannon fits in. Responsible for aiming and part of the tank's health
-enum Turret implements Collideable, Renderable{
+enum Turret implements Collideable, Renderable, Opaque{
   
   TEST(PartBuilder.compatibilitySet(1), PI/20,30,10,5.0,new float[]{20,-10,-10},new float[]{0,17.3,-17.3},3,#6E52FF,#6E52FF),
   PENT(PartBuilder.compatibilitySet(1), PI/25,45,15,6.0,new float[]{20.00, 6.18, -16.18, -16.18, 6.18}, new float[]{0.00, 19.02, 11.76, -11.76, -19.02}, 5, #87F4F5, #225D67),
@@ -89,6 +102,7 @@ enum Turret implements Collideable, Renderable{
   public final Set<Integer> compatibility;
   
   private final Shape collision;
+  private final List<LineSegment> edges;
   private final PShape render;
   
   private Turret(Set<Integer> compatibility, float turnRate, int maxHealth, float cannonMount, float mass, float[] xPoints, float[] yPoints, int points, color fill, color stroke) {
@@ -98,11 +112,15 @@ enum Turret implements Collideable, Renderable{
     this.cannonOffset=cannonMount;
     this.compatibility=compatibility;
     this.render=PartBuilder.createRender(xPoints,yPoints,points,fill,stroke);
+    this.edges = PartBuilder.createEdges(xPoints,yPoints,points);
     this.collision=PartBuilder.createCollision(xPoints,yPoints,points);
   }
   
   public Shape getCollider() {
     return collision;
+  }
+  public List<LineSegment> getEdges() {
+    return edges;
   }
   public PShape getRender() {
     return render;

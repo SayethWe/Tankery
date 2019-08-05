@@ -2,7 +2,7 @@ import java.awt.geom.Area;
 import java.util.Random;
 
 //the drivey bit that makes up the real meat of the game
-class Tank extends Entity implements Hittable, Impactor {
+class Tank extends Entity implements Hittable, Impactor, Opaque  {
   private final Hull hull;
   private final Turret turret;
   private final Cannon cannon;
@@ -74,6 +74,7 @@ class Tank extends Entity implements Hittable, Impactor {
   protected void addToTrackers() {
     hittables.add(this);
     impactors.add(this);
+    viewBlocks.add(this);
     super.addToTrackers();
   }
   
@@ -136,6 +137,16 @@ class Tank extends Entity implements Hittable, Impactor {
   
   public float getTurretDirection() {
    return turretFacing+facing;
+  }
+  
+  @Override
+  public List<LineSegment> getEdges() {
+    List<LineSegment> result = new ArrayList<LineSegment>();
+    println(hull.getEdges().size());
+    for(LineSegment l : hull.getEdges()) {
+      result.add(l.translate(x,y).rotate(x,y,facing));
+    }
+    return result;
   }
   
   public void fireMain() {

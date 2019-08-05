@@ -34,6 +34,10 @@ abstract class Player extends Entity {
       viewCoolDown=VIEW_COOL_DOWN;
     }
   }
+  
+  public Shape getViewPoly() {
+    return viewFields[selectedView].createViewPolygon(x,y,facing);
+  }
 
   public void moveTo(Entity e) {
     moveTo(e.getX(), e.getY());
@@ -48,9 +52,9 @@ abstract class Player extends Entity {
   }
 
   public void render() {
-    stroke(255, 50, 70);
-    float viewLength = viewFields[selectedView].getViewDistance();
-    line(x, y, x+cos(facing)*viewLength, y+sin(facing)*viewLength);
+    //stroke(255, 50, 70);
+    //float viewLength = viewFields[selectedView].getViewDistance();
+    //line(x, y, x+cos(facing)*viewLength, y+sin(facing)*viewLength);
     //if(this.equals(testPlayer)) viewFields[selectedView].render(x,y,facing);
   }
 
@@ -70,7 +74,7 @@ public class TestPlayer extends Player {
   }
   
   public TestPlayer(Tank vehicle) {
-     super(vehicle, new ViewField(TWO_PI, 200, 3));
+     super(vehicle, new ViewField(5*TWO_PI/6, 200, 3));
   }
   
   public void handleKeyInput(Keybind kb) {
@@ -286,57 +290,4 @@ public class Gunner extends Player {
     moveTo(vehicle.getTurretPivotX(),vehicle.getTurretPivotY());
     turnTo(vehicle.getTurretDirection());
   }
-}
-
-//a certain space that can be seen
-public class ViewField {
-  
-  private final float viewAngle;
-  private final float viewDistance;
-  private final float viewDistSquare;
-  private final int fogScale;
-  
-  public ViewField(float viewAngle, float viewDistance, int resolution) {
-    this.viewAngle = viewAngle;
-    this.viewDistance = viewDistance;
-    this.viewDistSquare = viewDistance*viewDistance;
-    this.fogScale = resolution;
-  }
-  
-  public boolean isInView(float x, float y, float facing, float checkX, float checkY) {
-    float distSquare=findSquareDist(checkX, checkY, x, y);
-    if (distSquare>=viewDistSquare)return false;
-
-    float angle=atan2(checkY-y, checkX-x);
-    angle=(angle+TWO_PI)%TWO_PI;
-    float viewArc = viewAngle/2;
-    //herein lies the problem
-    float seperation = angleBetween(facing,angle);
-    return (abs(seperation)<=viewArc);
-  }
-  
-  //public void render(float x, float y, float facing) {
-  //  fill(128);
-  //  noStroke();
-  //  beginShape();
-  //  vertex(x,y);
-  //  vertex(x+viewDistance*cos(facing+viewAngle/2),y+viewDistance*sin(facing+viewAngle/2));
-  //  float angle = floor(facing/PI/2)*PI/2+PI/4;
-  //  float dist=sqrt(2)*viewDistance;
-  //  for(int i = 0; i<4;i++) {
-  //    float dir = i*PI/2+angle;
-  //    vertex(x+dist*cos(dir),y+dist*sin(dir));
-  //  }
-  //  vertex(x+viewDistance*cos(facing-viewAngle/2),y+viewDistance*sin(facing-viewAngle/2));
-  //  endShape(CLOSE);
-  //}
-  
-  public float getViewDistance() {
-    return viewDistance;
-  }
-  
-  public int getFogScale() {
-    return fogScale;
-  }
-  
 }

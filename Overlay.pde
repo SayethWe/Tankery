@@ -35,13 +35,15 @@ void handleFog() {
   stroke(128);
   fill(128);
   rectMode(CORNER);
+  Shape viewRange = testPlayer.getViewPoly();
   for(int i = -tpv;i<=tpv;i+=fogScale){
     for(int j = -tpv;j<=tpv;j+=fogScale){
       int x=tpx+i;
       int y=tpy+j;
       if ((x>=0&&x<=width)&&(y>=0&&y<=height)){
-        if (!testPlayer.isInView(x,y)) {
+        //if (!testPlayer.isInView(x,y)) {
         //if(!playerTank.contains(x,y)) {
+        if(!viewRange.contains(x,y)) {
           rect(x,y,fogScale,fogScale);
         }
       }

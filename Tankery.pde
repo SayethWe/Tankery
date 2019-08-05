@@ -23,6 +23,7 @@ Player testGunner;
 public static final Set<Entity>entities=new HashSet<Entity>();
 public static final Set<Impactor>impactors=new HashSet<Impactor>();
 public static final Set<Hittable>hittables=new HashSet<Hittable>();
+public static final Set<Opaque> viewBlocks = new HashSet<Opaque>();
 public static final Set<AbstractAI>robots=new HashSet<AbstractAI>();
 
 //Things that should be removed from the trackers
@@ -45,9 +46,9 @@ void setup() {
   new Tank(200,300,PI/3,PI/2,0);
   //new PatrolAI(500,400,PI/4,PI/6,100,75,Prebuild.FAST,0,testRoute());
   //new PatrolAI(650,75,PI,3*PI/5,50,52.5,0,testRoute());
-  new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.LONG,Engine.WEAK,MachineGun.NONE,testBack());
-  new PIDAI(650,300,PI,3*PI/5,50,52.5,Prebuild.FAST,0,testRoute(),new float[]{2,0,0,-1,0,0});
-  new Infantry(700,50,0,0);
+  //new PatrolAI(100,600,PI/2,PI/2,70,34,0,Hull.TEST,Turret.PENT,Cannon.LONG,Engine.WEAK,MachineGun.NONE,testBack());
+  //new PIDAI(650,300,PI,3*PI/5,50,52.5,Prebuild.FAST,0,testRoute(),new float[]{2,0,0,-1,0,0});
+  //new Infantry(700,50,0,0);
 
   
   //initialize the test roles
@@ -66,8 +67,10 @@ void draw() {
   handleKeys();
   updateAll();
   handleCollisions();
-  //handleFog(); //Must be penultimate call
+  if(doFog) handleFog(); //Must be penultimate call
   drawUI(); //must be last call
+  testPlayer.getViewPoly();
+  println("frame");
 }
 
 //called when the program closes
